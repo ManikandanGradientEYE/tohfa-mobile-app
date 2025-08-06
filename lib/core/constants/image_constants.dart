@@ -1,5 +1,4 @@
-class ImageConstants{
-
+class ImageConstants {
   static const String appLogo = "assets/images/app_logo.png";
   static const String appLogo2 = "assets/images/app_logo.png";
   static const String placeHolder = "assets/images/place_holder.jpg";
@@ -12,6 +11,7 @@ class ImageConstants{
   static const String notification = "assets/images/Group.png";
   static const String ticket = "assets/images/ticket.png";
   static const String logout = "assets/images/logout.png";
+  static const String bin = "assets/images/bin_icon.png";
   static const String mail = "assets/images/mail.png";
   static const String support = "assets/images/support.png";
   static const String feedbacks = "assets/images/feedbacks.png";
@@ -26,5 +26,4 @@ class ImageConstants{
   static const String icReport = "assets/images/ic_report.png";
   static const String icSetting = "assets/images/setting.png";
   static const String orderCompleted = "assets/images/order_completed.png";
-
 }

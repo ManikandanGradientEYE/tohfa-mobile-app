@@ -1,5 +1,8 @@
 import 'package:demo/core/widgets/custom_drop_down.dart';
 import 'package:demo/export.dart';
+import 'package:demo/features/auth/sign_in/presentation/bloc/sign_in_cubit.dart';
+import 'package:demo/features/auth/sign_in/presentation/bloc/sign_in_state.dart';
+
 import '../bloc/profile_bloc_cubit.dart';
 import '../bloc/profile_bloc_state.dart';
 
@@ -28,13 +31,17 @@ class ProfileScreen extends StatelessWidget {
         "image": ImageConstants.phone,
       },
 
-      {
-        "title": "Generate Token",
-        "image": ImageConstants.ticket,
-      },
+      // {
+      //   "title": "Generate Token",
+      //   "image": ImageConstants.ticket,
+      // },
       {
         "title": "Logout",
         "image": ImageConstants.logout,
+      },
+      {
+        "title": "Delete Account",
+        "image": ImageConstants.bin,
       },
       // {
       //   "title": "Invoice",
@@ -83,9 +90,7 @@ class ProfileScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: CustomText(
-                                  text: Singleton
-                                          .instance.userData?.customerName ??
-                                      "N/A",
+                                  text: Singleton.instance.userData?.customerName ?? "N/A",
                                   style: CustomTextStyle.normalText.copyWith(
                                       color: Color(0xFF606060),
                                       fontWeight: FontWeight.w400,
@@ -94,19 +99,16 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  final data = await NavigatorService.pushNamed(
-                                      AppRoutes.editProfileScreen);
+                                  final data =
+                                      await NavigatorService.pushNamed(AppRoutes.editProfileScreen);
                                   if (data != null) {
-                                    context
-                                        .read<ProfileBlocCubit>()
-                                        .getProfile();
+                                    context.read<ProfileBlocCubit>().getProfile();
                                   }
                                 },
                                 child: Container(
                                   padding: getPadding(all: 5),
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.white),
+                                  decoration:
+                                      BoxDecoration(shape: BoxShape.circle, color: AppColors.white),
                                   child: Icon(
                                     Icons.edit_outlined,
                                     color: Color(0xFF606060),
@@ -118,9 +120,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           CustomText(
                             textAlign: TextAlign.center,
-                            text: Singleton
-                                    .instance.userData?.customerBillEmail ??
-                                "N/A",
+                            text: Singleton.instance.userData?.customerBillEmail ?? "N/A",
                             style: CustomTextStyle.normalText.copyWith(
                                 color: Color(0xFF656565),
                                 fontWeight: FontWeight.w400,
@@ -165,10 +165,8 @@ class ProfileScreen extends StatelessWidget {
                           //   )
                           //   ],
                           // ),
-                          customDropDown2(bloc.customerSiteModel,
-                              (p0) => p0.customerSiteName ?? "",
-                              customLabel: SizedBox(),
-                              onChanged: (value) async {
+                          customDropDown2(bloc.customerSiteModel, (p0) => p0.customerSiteName ?? "",
+                              customLabel: SizedBox(), onChanged: (value) async {
                             await SharedPref.instance.setUserData(value!);
                             // Singleton.instance.appInit();
                             bloc.getProfile();
@@ -181,11 +179,10 @@ class ProfileScreen extends StatelessWidget {
                                 padding: getPadding(all: 8),
                                 decoration: BoxDecoration(
                                     color: AppColors.whiteText,
-                                    borderRadius:
-                                        BorderRadius.circular(getSize(3))),
+                                    borderRadius: BorderRadius.circular(getSize(3))),
                                 child: CustomText(
                                   text:
-                                      "TIER:\n ${Singleton.instance.userOtherData?.tierName == null || Singleton.instance.userOtherData!.tierName.toString().isEmpty ? "N/A" : Singleton.instance.userOtherData!.tierName.toString()}",
+                                      "TIER : ${Singleton.instance.userOtherData?.tierName == null || Singleton.instance.userOtherData!.tierName.toString().isEmpty ? "N/A" : Singleton.instance.userOtherData!.tierName.toString()}",
                                   textAlign: TextAlign.center,
                                   style: CustomTextStyle.normalText.copyWith(
                                       color: Color(0xFF656565),
@@ -193,22 +190,22 @@ class ProfileScreen extends StatelessWidget {
                                       fontSize: getSize(14)),
                                 ),
                               ),
-                              Container(
-                                padding: getPadding(all: 8),
-                                decoration: BoxDecoration(
-                                    color: AppColors.whiteText,
-                                    borderRadius:
-                                        BorderRadius.circular(getSize(3))),
-                                child: CustomText(
-                                  text:
-                                      "Total Purchase Value: \n${Singleton.instance.userOtherData?.totalPurchaseValue ?? "N/A"} ",
-                                  textAlign: TextAlign.center,
-                                  style: CustomTextStyle.normalText.copyWith(
-                                      color: Color(0xFF656565),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: getSize(14)),
-                                ),
-                              ),
+                              // Container(
+                              //   padding: getPadding(all: 8),
+                              //   decoration: BoxDecoration(
+                              //       color: AppColors.whiteText,
+                              //       borderRadius:
+                              //           BorderRadius.circular(getSize(3))),
+                              //   child: CustomText(
+                              //     text:
+                              //         "Total Purchase Value: \n${Singleton.instance.userOtherData?.totalPurchaseValue ?? "N/A"} ",
+                              //     textAlign: TextAlign.center,
+                              //     style: CustomTextStyle.normalText.copyWith(
+                              //         color: Color(0xFF656565),
+                              //         fontWeight: FontWeight.w500,
+                              //         fontSize: getSize(14)),
+                              //   ),
+                              // ),
                             ],
                           )
                         ],
@@ -228,8 +225,7 @@ class ProfileScreen extends StatelessWidget {
                           child: InkWell(
                             onTap: () async {
                               if (list[index]['route'] != null) {
-                                Navigator.pushNamed(
-                                    context, list[index]['route']);
+                                Navigator.pushNamed(context, list[index]['route']);
                               } else if (list[index]['title'] == "Logout") {
                                 showDialog(
                                   context: context,
@@ -240,8 +236,7 @@ class ProfileScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       title: Text("Logout"),
-                                      content: Text(
-                                          "Are you sure you want to logout?"),
+                                      content: Text("Are you sure you want to logout?"),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
@@ -254,8 +249,7 @@ class ProfileScreen extends StatelessWidget {
                                             Navigator.of(context).pop();
                                             SharedPref.instance.logOut();
                                             Navigator.pushReplacementNamed(
-                                                context,
-                                                AppRoutes.sendOtpScreen);
+                                                context, AppRoutes.sendOtpScreen);
                                           },
                                           child: Text("Logout"),
                                         ),
@@ -263,150 +257,185 @@ class ProfileScreen extends StatelessWidget {
                                     );
                                   },
                                 );
+                              } else if (list[index]['title'] == "Delete Account") {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: AppColors.bgColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      title: Text("Delete Account"),
+                                      content:
+                                          Text("Are you sure you want to delete your account?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("No"),
+                                        ),
+                                        BlocProvider<SignInCubit>(
+                                          create: (context) => SignInCubit(false),
+                                          child: BlocConsumer<SignInCubit, SignInState>(
+                                              listener: (context, state1) {
+                                            if (state1 is SignInSuccessState) {
+                                              log("=---=-=-==- ${state1.loginResponse.length}");
+                                            }
+                                          }, builder: (context, state1) {
+                                            return TextButton(
+                                              onPressed: () {
+                                                final bloc1 = context.read<SignInCubit>();
+                                                var contactNo =
+                                                    bloc.selectedModel!.ogContactNo.toString();
+                                                // var contactNo = "";
+                                                // if (state1 is SignInSuccessState) {
+                                                //   log("=--=- ${state1.loginResponse.length}");
+                                                // }
+                                                // for (var i = 0;
+                                                //     i < bloc1.loginResponse.length;
+                                                //     i++) {
+                                                //   log("=--=- ${bloc1.loginResponse[i].id}");
+                                                //   if (bloc1.loginResponse[i].id ==
+                                                //       bloc.selectedModel!.customerId) {
+                                                //     contactNo = bloc1.loginResponse[i].contactNo;
+                                                //
+                                                //     break;
+                                                //   }
+                                                // }
+                                                var contactCode =
+                                                    bloc.selectedModel!.customerShipIsdCode ??
+                                                        "+91";
+                                                log(contactNo, name: "CUSTOMER CONTACT NO");
+                                                log("$contactCode", name: "CUSTOMER CONTACT CODE");
+
+                                                bloc1.sendOtp(
+                                                  contactNo,
+                                                  contactCode ?? "+91",
+                                                  isForDeleteAccount: true,
+                                                  customerSiteId: bloc.selectedModel!.id,
+                                                  context: context,
+                                                );
+
+                                                // var customerSiteId = bloc.selectedModel!.id;
+                                                // log("$customerSiteId",
+                                                //     name: "DELETE ACCOUNT CUSTOMER SITE ID");
+                                                // bloc.deleteAccount(customerSiteId: customerSiteId);
+
+                                                // Navigator.of(context).pop();
+                                                // SharedPref.instance.logOut();
+                                                // Navigator.pushReplacementNamed(
+                                                //     context, AppRoutes.sendOtpScreen);
+                                              },
+                                              child: Text(
+                                                "Yes",
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               } else {
-                                await bloc.getvisitStatus(
-                                    customerSiteId: bloc.selectedModel?.id);
+                                await bloc.getvisitStatus(customerSiteId: bloc.selectedModel?.id);
 
                                 if (bloc.visitStatusModel.isNotEmpty) {
                                   await bloc.getAllSections(
-                                      siteId: bloc.visitStatusModel.first.siteId
-                                          .toString());
-                                  bloc.selectedVisitStutsId = bloc
-                                      .visitStatusModel.first.siteId
-                                      .toString();
-                                  bloc.selectedVisitStuts = bloc
-                                      .visitStatusModel.first.siteName
-                                      .toString();
+                                      siteId: bloc.visitStatusModel.first.siteId.toString());
+                                  bloc.selectedVisitStutsId =
+                                      bloc.visitStatusModel.first.siteId.toString();
+                                  bloc.selectedVisitStuts =
+                                      bloc.visitStatusModel.first.siteName.toString();
                                 }
                                 if (bloc.sectionModel.isNotEmpty) {
-                                  bloc.selectedSection =
-                                      bloc.sectionModel.first.text.toString();
-                                  bloc.selectedSectionId =
-                                      bloc.sectionModel.first.value.toString();
+                                  bloc.selectedSection = bloc.sectionModel.first.text.toString();
+                                  bloc.selectedSectionId = bloc.sectionModel.first.value.toString();
                                 }
 
                                 if (bloc.visitStatusModel.isEmpty) {
-                                  showInSnackBar(
-                                      "Need to visit Site to Generate Tokens",
-                                      context);
+                                  showInSnackBar("Need to visit Site to Generate Tokens", context);
                                 } else {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return StatefulBuilder(
-                                            builder: (context, setState) {
+                                        return StatefulBuilder(builder: (context, setState) {
                                           return Dialog(
-                                            insetPadding: EdgeInsets.symmetric(
-                                                horizontal: 15),
+                                            insetPadding: EdgeInsets.symmetric(horizontal: 15),
                                             backgroundColor: AppColors.bgColor,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
+                                              borderRadius: BorderRadius.circular(15),
                                             ),
                                             child: Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 5.0,
-                                                  right: 5.0,
-                                                  top: 15.0,
-                                                  bottom: 15),
+                                                  left: 5.0, right: 5.0, top: 15.0, bottom: 15),
                                               child: SingleChildScrollView(
                                                 child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 5.0,
-                                                              bottom: 15),
+                                                      padding: const EdgeInsets.only(
+                                                          left: 5.0, bottom: 15),
                                                       child: CustomText(
-                                                        text:
-                                                            "Create New Token",
-                                                        style: CustomTextStyle
-                                                            .bodyText
-                                                            .copyWith(
-                                                          color: AppColors
-                                                              .blackText,
+                                                        text: "Create New Token",
+                                                        style: CustomTextStyle.bodyText.copyWith(
+                                                          color: AppColors.blackText,
                                                           fontSize: getSize(16),
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                          fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
                                                     ),
                                                     Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
+                                                      padding: const EdgeInsets.symmetric(
                                                           horizontal: 5.0),
                                                       child: Row(
                                                         children: [
                                                           Expanded(
                                                             child: Column(
                                                               crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                                  CrossAxisAlignment.start,
                                                               children: [
                                                                 CustomText(
-                                                                  text:
-                                                                      "Site :",
-                                                                  style: CustomTextStyle
-                                                                      .bodyText
+                                                                  text: "Site :",
+                                                                  style: CustomTextStyle.bodyText
                                                                       .copyWith(
-                                                                    color: AppColors
-                                                                        .blackText,
-                                                                    fontSize:
-                                                                        getSize(
-                                                                            15),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
+                                                                    color: AppColors.blackText,
+                                                                    fontSize: getSize(15),
+                                                                    fontWeight: FontWeight.w400,
                                                                   ),
                                                                 ),
-                                                                getSizeBox(
-                                                                    height: 2),
+                                                                getSizeBox(height: 2),
                                                                 customDropDown2(
                                                                   bloc.visitStatusModel,
-                                                                  (p0) =>
-                                                                      p0.siteName ??
-                                                                      "",
-                                                                  customLabel:
-                                                                      SizedBox(),
-                                                                  defaultHintText:
-                                                                      "Select Site",
-                                                                  onChanged:
-                                                                      (value) async {
-                                                                    bloc.sectionModel
-                                                                        .clear();
+                                                                  (p0) => p0.siteName ?? "",
+                                                                  customLabel: SizedBox(),
+                                                                  defaultHintText: "Select Site",
+                                                                  onChanged: (value) async {
+                                                                    bloc.sectionModel.clear();
                                                                     await bloc.getAllSections(
-                                                                        siteId: value!
-                                                                            .siteId
+                                                                        siteId: value!.siteId
                                                                             .toString());
                                                                     bloc.onDropDownValueChange(
-                                                                        value: value
-                                                                            .siteName
+                                                                        value: value.siteName
                                                                             .toString(),
-                                                                        isCustomerSite:
-                                                                            true);
+                                                                        isCustomerSite: true);
 
-                                                                    bloc.selectedVisitStutsId = value
-                                                                        .siteId
-                                                                        .toString();
+                                                                    bloc.selectedVisitStutsId =
+                                                                        value.siteId.toString();
                                                                     if (bloc
-                                                                        .sectionModel
-                                                                        .isNotEmpty) {
+                                                                        .sectionModel.isNotEmpty) {
                                                                       bloc.selectedSection = bloc
-                                                                          .sectionModel
-                                                                          .first
-                                                                          .text
+                                                                          .sectionModel.first.text
                                                                           .toString();
                                                                     }
                                                                     setState(
                                                                       () {},
                                                                     );
                                                                   },
-                                                                  valueText: bloc
-                                                                      .selectedVisitStuts,
+                                                                  valueText:
+                                                                      bloc.selectedVisitStuts,
                                                                 ),
                                                               ],
                                                             ),
@@ -415,56 +444,38 @@ class ProfileScreen extends StatelessWidget {
                                                           Expanded(
                                                             child: Column(
                                                               crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                                  CrossAxisAlignment.start,
                                                               children: [
                                                                 CustomText(
-                                                                  text:
-                                                                      "Section :",
-                                                                  style: CustomTextStyle
-                                                                      .bodyText
+                                                                  text: "Section :",
+                                                                  style: CustomTextStyle.bodyText
                                                                       .copyWith(
-                                                                    color: AppColors
-                                                                        .blackText,
-                                                                    fontSize:
-                                                                        getSize(
-                                                                            15),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
+                                                                    color: AppColors.blackText,
+                                                                    fontSize: getSize(15),
+                                                                    fontWeight: FontWeight.w400,
                                                                   ),
                                                                 ),
-                                                                getSizeBox(
-                                                                    height: 2),
+                                                                getSizeBox(height: 2),
                                                                 customDropDown2(
                                                                   bloc.sectionModel,
-                                                                  (p0) => p0
-                                                                      .text
-                                                                      .toString(),
-                                                                  customLabel:
-                                                                      SizedBox(),
-                                                                  onChanged:
-                                                                      (value) async {
+                                                                  (p0) => p0.text.toString(),
+                                                                  customLabel: SizedBox(),
+                                                                  onChanged: (value) async {
                                                                     bloc.onDropDownValueChange(
-                                                                        value: value!
-                                                                            .text
-                                                                            .toString(),
-                                                                        isCustomerSite:
-                                                                            false);
+                                                                        value:
+                                                                            value!.text.toString(),
+                                                                        isCustomerSite: false);
 
-                                                                    bloc.selectedSectionId = value
-                                                                        .value
-                                                                        .toString();
+                                                                    bloc.selectedSectionId =
+                                                                        value.value.toString();
                                                                     setState(
                                                                       () {},
                                                                     );
                                                                   },
-                                                                  valueText: bloc
-                                                                          .selectedSection
-                                                                          .isEmpty
-                                                                      ? "Select"
-                                                                      : bloc
-                                                                          .selectedSection,
+                                                                  valueText:
+                                                                      bloc.selectedSection.isEmpty
+                                                                          ? "Select"
+                                                                          : bloc.selectedSection,
                                                                 ),
                                                               ],
                                                             ),
@@ -474,63 +485,41 @@ class ProfileScreen extends StatelessWidget {
                                                     ),
                                                     getSizeBox(height: 25),
                                                     Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
+                                                      mainAxisAlignment: MainAxisAlignment.end,
                                                       children: [
                                                         GestureDetector(
                                                           onTap: () async {
-                                                            String
-                                                                generatedToken =
+                                                            String generatedToken =
                                                                 await bloc.generateToken(
-                                                                    customerSite: bloc
-                                                                        .selectedModel!
-                                                                        .id,
-                                                                    sectionId: bloc
-                                                                        .selectedSectionId,
-                                                                    siteId: bloc
-                                                                        .selectedVisitStutsId);
-                                                            Navigator.pop(
-                                                                context);
+                                                                    customerSite:
+                                                                        bloc.selectedModel!.id,
+                                                                    sectionId:
+                                                                        bloc.selectedSectionId,
+                                                                    siteId:
+                                                                        bloc.selectedVisitStutsId);
+                                                            Navigator.pop(context);
                                                             customAlertDialog(
                                                                 title: "Token",
                                                                 message:
                                                                     "Your generated token is $generatedToken");
                                                           },
                                                           child: Container(
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    right: 10),
-                                                            decoration:
-                                                                BoxDecoration(
+                                                            margin: EdgeInsets.only(right: 10),
+                                                            decoration: BoxDecoration(
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              color: AppColors
-                                                                  .green,
+                                                                  BorderRadius.circular(10),
+                                                              color: AppColors.green,
                                                             ),
                                                             child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          15.0,
-                                                                      vertical:
-                                                                          8),
+                                                              padding: const EdgeInsets.symmetric(
+                                                                  horizontal: 15.0, vertical: 8),
                                                               child: CustomText(
-                                                                text:
-                                                                    "Generate",
-                                                                style: CustomTextStyle
-                                                                    .bodyText
+                                                                text: "Generate",
+                                                                style: CustomTextStyle.bodyText
                                                                     .copyWith(
-                                                                  color: AppColors
-                                                                      .whiteText,
-                                                                  fontSize:
-                                                                      getSize(
-                                                                          15),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
+                                                                  color: AppColors.whiteText,
+                                                                  fontSize: getSize(15),
+                                                                  fontWeight: FontWeight.w500,
                                                                 ),
                                                               ),
                                                             ),
@@ -551,28 +540,44 @@ class ProfileScreen extends StatelessWidget {
                             child: Row(
                               spacing: getSize(10),
                               children: [
-                                Container(
-                                  height: getSize(48),
-                                  width: getSize(48),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF9F6F6)
-                                        .withValues(alpha: .27),
-                                    borderRadius:
-                                        BorderRadius.circular(getSize(8)),
-                                    border: Border.all(
-                                      color: Color(0xfffbdb6b6)
-                                          .withValues(alpha: .15),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: CustomImageView(
-                                      imagePath: list[index]['image'],
-                                      height: getSize(26),
-                                      width: getSize(26),
-                                      color: AppColors.primaryColor,
-                                    ),
-                                  ),
-                                ),
+                                list[index]['title'] == "Delete"
+                                    ? Container(
+                                        height: getSize(48),
+                                        width: getSize(48),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFF9F6F6).withValues(alpha: .27),
+                                          borderRadius: BorderRadius.circular(getSize(8)),
+                                          border: Border.all(
+                                            color: Color(0xfffbdb6b6).withValues(alpha: .15),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                            size: getSize(26),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        height: getSize(48),
+                                        width: getSize(48),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFF9F6F6).withValues(alpha: .27),
+                                          borderRadius: BorderRadius.circular(getSize(8)),
+                                          border: Border.all(
+                                            color: Color(0xfffbdb6b6).withValues(alpha: .15),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: CustomImageView(
+                                            imagePath: list[index]['image'],
+                                            height: getSize(26),
+                                            width: getSize(26),
+                                            color: AppColors.primaryColor,
+                                          ),
+                                        ),
+                                      ),
                                 Expanded(
                                   child: CustomText(
                                     text: list[index]['title'],

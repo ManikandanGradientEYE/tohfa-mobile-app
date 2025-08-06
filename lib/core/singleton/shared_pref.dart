@@ -40,6 +40,16 @@ class SharedPref {
     return prefs.getString(SharedKey.authToken);
   }
 
+  // Future<void> setUserMobile({required String userMobile}) async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   await prefs.setString(SharedKey.userMobile, userMobile);
+  // }
+
+  // Future<String?> getUserMobile() async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   return prefs.getString(SharedKey.userMobile);
+  // }
+
   /// login data
   Future<void> setUserOtherData(UserOtherDataModel userObj) async {
     final SharedPreferences prefs = await _prefs;

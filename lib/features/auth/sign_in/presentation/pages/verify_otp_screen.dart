@@ -13,8 +13,15 @@ class VerifyOtpScreen extends StatefulWidget {
   final bool isUserFromReg;
   final bool isFromEditScreen;
   final dynamic bodyForUpdateProfile;
+  final bool isForDeleteAccount;
+  final String customerSiteId;
+
   const VerifyOtpScreen(this.isUserFromReg,
-      {super.key, this.isFromEditScreen = false, this.bodyForUpdateProfile});
+      {super.key,
+      this.isFromEditScreen = false,
+      this.bodyForUpdateProfile,
+      this.isForDeleteAccount = false,
+      this.customerSiteId = ""});
 
   static Widget builder(BuildContext context) {
     // final arg = (ModalRoute.of(context)?.settings.arguments ?? false) as bool;
@@ -22,6 +29,8 @@ class VerifyOtpScreen extends StatefulWidget {
     final isUserFromReg = args['isUserFromReg'] as bool? ?? false;
     final isFromEditScreen = args['isFromEditScreen'] as bool? ?? false;
     final bodyForUpdateProfile = args['bodyForUpdateProfile'] as dynamic ?? {};
+    final isForDeleteAccount = args['isForDeleteAccount'] as bool? ?? false;
+    final customerSiteId = args['customerSiteId'] as String? ?? "";
 
     return BlocProvider<SignInCubit>(
         create: (context) => SignInCubit(isUserFromReg)..startOtpTimer(),
@@ -29,6 +38,8 @@ class VerifyOtpScreen extends StatefulWidget {
           isUserFromReg,
           isFromEditScreen: isFromEditScreen,
           bodyForUpdateProfile: bodyForUpdateProfile,
+          isForDeleteAccount: isForDeleteAccount,
+          customerSiteId: customerSiteId,
         ));
     // return BlocProvider<SignInCubit>(
     //   create: (context) => SignInCubit(arg)..startOtpTimer(),
@@ -67,8 +78,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     loginResponse.first.membershipStatus == "Active") {
                   loginResponseModel = loginResponse.first;
                   cubit.loginResponseModel = loginResponseModel;
-                  await cubit.getCustomerSiteId(
-                      loginResponseModel.id.toString(), loginResponse);
+                  await cubit.getCustomerSiteId(loginResponseModel.id.toString(), loginResponse);
                 } else {
                   int? selectedAccountIndex;
                   final data = await customDialog2(
@@ -84,21 +94,17 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                 padding: getPadding(top: 10, bottom: 10),
                                 shrinkWrap: true,
                                 itemCount: loginResponse.length,
-                                separatorBuilder: (context, index) =>
-                                    getSizeBox(height: 8),
+                                separatorBuilder: (context, index) => getSizeBox(height: 8),
                                 itemBuilder: (context, index) {
                                   final item = loginResponse[index];
-                                  bool isSelected =
-                                      selectedAccountIndex == index;
+                                  bool isSelected = selectedAccountIndex == index;
                                   return Container(
                                     margin: EdgeInsets.symmetric(horizontal: 8),
                                     padding: getPadding(all: 5),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color: AppColors.primaryColorDark
-                                              .withValues(
-                                                  alpha:
-                                                      isSelected ? 0.8 : 0.2)),
+                                              .withValues(alpha: isSelected ? 0.8 : 0.2)),
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     child: RadioListTile<int>(
@@ -111,16 +117,13 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                             selectedAccountIndex = value!;
                                           });
                                         } else {
-                                          await _customErrorDialog(
-                                              item.membershipStatus ?? "Idle");
+                                          await _customErrorDialog(item.membershipStatus ?? "Idle");
                                         }
                                       },
                                       title: CustomText(
                                         text: item.customerAlias,
-                                        style: CustomTextStyle.headingText
-                                            .copyWith(
-                                                fontSize: getSize(14),
-                                                color: AppColors.blackText),
+                                        style: CustomTextStyle.headingText.copyWith(
+                                            fontSize: getSize(14), color: AppColors.blackText),
                                       ),
                                       subtitle: CustomText(
                                         text: item.customerName,
@@ -141,10 +144,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                   showToast("Please select Customer Account");
                                   return;
                                 }
-                                final selectedAccount =
-                                    loginResponse[selectedAccountIndex!];
-                                NavigatorService.goBack(
-                                    arguments: selectedAccount);
+                                final selectedAccount = loginResponse[selectedAccountIndex!];
+                                NavigatorService.goBack(arguments: selectedAccount);
                               },
                             )
                           ],
@@ -161,29 +162,24 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   }
 
                   if (loginResponseModel != null) {
-                    await cubit.getCustomerSiteId(
-                        loginResponseModel.id.toString(), loginResponse);
+                    await cubit.getCustomerSiteId(loginResponseModel.id.toString(), loginResponse);
                     cubit.loginResponseModel = loginResponseModel;
                   }
                 }
               }
               if (state is SignInSuccessState2) {
-                List<CustomerSiteIdModel> customerSiteModel =
-                    state.customerSiteModel;
+                List<CustomerSiteIdModel> customerSiteModel = state.customerSiteModel;
                 if (customerSiteModel.isEmpty) {
                   showToast("Login account not found");
                   // NavigatorService.goBack();
                 } else if (customerSiteModel.length == 1) {
-                  await SharedPref.instance
-                      .setUserData(customerSiteModel.first);
+                  await SharedPref.instance.setUserData(customerSiteModel.first);
                   await SharedPref.instance.setUserOtherData(UserOtherDataModel(
                     createdOn: cubit.loginResponseModel?.createdOn,
                     tierName: cubit.loginResponseModel?.tierName,
-                    totalPurchaseValue:
-                        cubit.loginResponseModel?.totalPurchaseValue,
+                    totalPurchaseValue: cubit.loginResponseModel?.totalPurchaseValue,
                   ));
-                  NavigatorService.pushNamedAndRemoveUntil(
-                      AppRoutes.dashBoardScreen);
+                  NavigatorService.pushNamedAndRemoveUntil(AppRoutes.dashBoardScreen);
                 } else {
                   int selectedAccountIndex = 0;
                   final data = await customDialog2(
@@ -199,21 +195,17 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                 padding: getPadding(top: 10, bottom: 10),
                                 shrinkWrap: true,
                                 itemCount: customerSiteModel.length,
-                                separatorBuilder: (context, index) =>
-                                    getSizeBox(height: 8),
+                                separatorBuilder: (context, index) => getSizeBox(height: 8),
                                 itemBuilder: (context, index) {
                                   final item = customerSiteModel[index];
-                                  bool isSelected =
-                                      selectedAccountIndex == index;
+                                  bool isSelected = selectedAccountIndex == index;
                                   return Container(
                                     margin: EdgeInsets.symmetric(horizontal: 8),
                                     padding: getPadding(all: 5),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color: AppColors.primaryColorDark
-                                              .withValues(
-                                                  alpha:
-                                                      isSelected ? 0.8 : 0.2)),
+                                              .withValues(alpha: isSelected ? 0.8 : 0.2)),
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     child: RadioListTile<int>(
@@ -227,10 +219,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                       },
                                       title: CustomText(
                                         text: item.customerSiteName ?? "N/A",
-                                        style: CustomTextStyle.headingText
-                                            .copyWith(
-                                                fontSize: getSize(14),
-                                                color: AppColors.blackText),
+                                        style: CustomTextStyle.headingText.copyWith(
+                                            fontSize: getSize(14), color: AppColors.blackText),
                                       ),
                                       subtitle: CustomText(
                                         text: item.customerName ??
@@ -239,8 +229,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                         style: CustomTextStyle.normalText
                                             .copyWith(fontSize: getSize(12)),
                                       ),
-                                      contentPadding: EdgeInsets
-                                          .zero, // Remove inner padding
+                                      contentPadding: EdgeInsets.zero,
                                     ),
                                   );
                                 },
@@ -249,10 +238,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                             CustomButton(
                               text: "LOGIN",
                               onPressed: () {
-                                final selectedAccount =
-                                    customerSiteModel[selectedAccountIndex];
-                                NavigatorService.goBack(
-                                    arguments: selectedAccount);
+                                final selectedAccount = customerSiteModel[selectedAccountIndex];
+                                NavigatorService.goBack(arguments: selectedAccount);
                               },
                             )
                           ],
@@ -263,14 +250,11 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
                   if (data != null) {
                     await SharedPref.instance.setUserData(data);
-                    NavigatorService.pushNamedAndRemoveUntil(
-                        AppRoutes.dashBoardScreen);
-                    await SharedPref.instance
-                        .setUserOtherData(UserOtherDataModel(
+                    NavigatorService.pushNamedAndRemoveUntil(AppRoutes.dashBoardScreen);
+                    await SharedPref.instance.setUserOtherData(UserOtherDataModel(
                       createdOn: cubit.loginResponseModel?.createdOn,
                       tierName: cubit.loginResponseModel?.tierName,
-                      totalPurchaseValue:
-                          cubit.loginResponseModel?.totalPurchaseValue,
+                      totalPurchaseValue: cubit.loginResponseModel?.totalPurchaseValue,
                     ));
                   } else {
                     showToast("No Account selected");
@@ -317,28 +301,24 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                             focusedPinTheme: PinTheme(
                               width: getSize(55),
                               height: getSize(55),
-                              textStyle: TextStyle(
-                                  fontSize: getSize(20),
-                                  fontWeight: FontWeight.w600),
+                              textStyle:
+                                  TextStyle(fontSize: getSize(20), fontWeight: FontWeight.w600),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(getSize(8)),
-                                border:
-                                    Border.all(color: AppColors.primaryColor),
+                                border: Border.all(color: AppColors.primaryColor),
                               ),
                             ),
                             defaultPinTheme: PinTheme(
                               width: getSize(55),
                               height: getSize(55),
-                              textStyle: TextStyle(
-                                  fontSize: getSize(20),
-                                  fontWeight: FontWeight.w600),
+                              textStyle:
+                                  TextStyle(fontSize: getSize(20), fontWeight: FontWeight.w600),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(getSize(8)),
                                 border: Border.all(
-                                    color: Colors.black.withValues(
-                                        alpha: 0.11999999731779099)),
+                                    color: Colors.black.withValues(alpha: 0.11999999731779099)),
                               ),
                             ),
                             onChanged: (value) async {
@@ -350,13 +330,13 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                 //   isLoading = true;
                                 // });
                                 var tempDate = Singleton.instance.tempRegData;
-                                await bloc.verifyOtp(
-                                    tempDate["ContactNo"],
-                                    tempDate["ISDCode"],
+                                await bloc.verifyOtp(tempDate["ContactNo"], tempDate["ISDCode"],
                                     bloc.otpController.text.trim(),
                                     isFromEditScreen: widget.isFromEditScreen,
-                                    bodyForUpdateProfile:
-                                        widget.bodyForUpdateProfile);
+                                    bodyForUpdateProfile: widget.bodyForUpdateProfile,
+                                    customerSiteId: widget.customerSiteId,
+                                    isForDeleteAccount: widget.isForDeleteAccount,
+                                    context: context);
                                 Future.delayed(Duration(seconds: 1));
                                 // setState(() {
                                 //   isLoading = false;
@@ -379,32 +359,25 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                             canResendOtp
                                 ? InkWell(
                                     onTap: () {
-                                      var tempDate =
-                                          Singleton.instance.tempRegData;
-                                      bloc.sendOtp(tempDate["ContactNo"],
-                                          tempDate["ISDCode"],
+                                      var tempDate = Singleton.instance.tempRegData;
+                                      bloc.sendOtp(tempDate["ContactNo"], tempDate["ISDCode"],
                                           isResend: true,
                                           context: context,
-                                          isFromEditProfile:
-                                              widget.isFromEditScreen);
+                                          isFromEditProfile: widget.isFromEditScreen);
                                     },
                                     child: CustomText(
                                       text: "Resend OTP",
-                                      style:
-                                          CustomTextStyle.subtitleText.copyWith(
+                                      style: CustomTextStyle.subtitleText.copyWith(
                                         fontWeight: FontWeight.w500,
                                         fontSize: getSize(16),
                                         decoration: TextDecoration.underline,
-                                        decorationColor:
-                                            AppColors.primaryColorDark,
+                                        decorationColor: AppColors.primaryColorDark,
                                       ),
                                     ),
                                   )
                                 : CustomText(
-                                    text:
-                                        "Resend OTP in ${formatTimer(timerSeconds)}",
-                                    style:
-                                        CustomTextStyle.subtitleText.copyWith(
+                                    text: "Resend OTP in ${formatTimer(timerSeconds)}",
+                                    style: CustomTextStyle.subtitleText.copyWith(
                                       fontWeight: FontWeight.w500,
                                       fontSize: getSize(16),
                                       color: Colors.grey,
@@ -428,16 +401,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         getSizeBox(height: 0),
                         BlocProvider<EditProfileCubit>(
                             create: (context2) => EditProfileCubit(),
-                            child: BlocConsumer<EditProfileCubit,
-                                EditProfileState>(
+                            child: BlocConsumer<EditProfileCubit, EditProfileState>(
                               listener: (context2, state1) {},
                               builder: (context2, state1) {
                                 return state1 is EditProfileLoadingState
                                     ? CustomButton(
                                         onPressed: () {},
                                         text: '',
-                                        child:
-                                            CircularProgressIndicator.adaptive(
+                                        child: CircularProgressIndicator.adaptive(
                                           backgroundColor: Colors.white,
                                         ),
                                       )
@@ -445,31 +416,22 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                         text: "Verify OTP",
                                         onPressed: () async {
                                           // bloc.callSuccess();
-                                          if (bloc.otpController.text
-                                                  .trim()
-                                                  .length !=
-                                              4) {
-                                            showToast(
-                                                "Please enter a valid 4-digit OTP");
+                                          if (bloc.otpController.text.trim().length != 4) {
+                                            showToast("Please enter a valid 4-digit OTP");
                                             HapticFeedback.vibrate();
                                           } else {
                                             // setState(() {
                                             //   isLoading = true;
                                             // });
-                                            var tempDate =
-                                                Singleton.instance.tempRegData;
-                                            log("${widget.isFromEditScreen}",
-                                                name: "IS FROM EDIT");
-                                            await bloc.verifyOtp(
-                                                tempDate["ContactNo"],
-                                                tempDate["ISDCode"],
-                                                bloc.otpController.text.trim(),
-                                                isFromEditScreen:
-                                                    widget.isFromEditScreen,
-                                                bodyForUpdateProfile: widget
-                                                    .bodyForUpdateProfile);
-                                            Future.delayed(
-                                                Duration(seconds: 1));
+                                            var tempDate = Singleton.instance.tempRegData;
+                                            log("${widget.isFromEditScreen}", name: "IS FROM EDIT");
+                                            await bloc.verifyOtp(tempDate["ContactNo"],
+                                                tempDate["ISDCode"], bloc.otpController.text.trim(),
+                                                isFromEditScreen: widget.isFromEditScreen,
+                                                bodyForUpdateProfile: widget.bodyForUpdateProfile,
+                                                customerSiteId: widget.customerSiteId,
+                                                isForDeleteAccount: widget.isForDeleteAccount);
+                                            Future.delayed(Duration(seconds: 1));
                                             // setState(() {
                                             //   isLoading = false;
                                             // });
@@ -478,12 +440,11 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                       );
                               },
                             )),
-                        if (widget.isFromEditScreen == false)
+                        if (widget.isFromEditScreen == false || widget.isForDeleteAccount == false)
                           Center(
                             child: InkWell(
                               onTap: () {
-                                NavigatorService.pushNamedAndRemoveUntil(
-                                    AppRoutes.sendOtpScreen);
+                                NavigatorService.pushNamedAndRemoveUntil(AppRoutes.sendOtpScreen);
                               },
                               child: CustomText(
                                 text: "Back to login",
@@ -491,8 +452,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: getSize(16),
                                     decoration: TextDecoration.underline,
-                                    decorationColor:
-                                        AppColors.primaryColorDark),
+                                    decorationColor: AppColors.primaryColorDark),
                               ),
                             ),
                           ),
@@ -501,8 +461,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   ),
                 ),
                 Visibility(
-                    visible:
-                        state is SignInLoadingState || bloc.isLoading == true,
+                    visible: state is SignInLoadingState || bloc.isLoading == true,
                     child: Container(
                       color: AppColors.primaryColorDark.withValues(alpha: .2),
                       child: CustomLoading(),

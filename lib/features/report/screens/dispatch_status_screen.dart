@@ -26,7 +26,8 @@ class DispatchStatusScreen extends StatelessWidget {
               message: state.errorMessage,
             );
           } else if (state is DispatchStatusSuccessState) {
-            List<DispatchStatus> orderMemoList =
+       
+            List<Datum> orderMemoList =
                 state.dispatchStatusResModel.data ?? [];
             return orderMemoList.isEmpty
                 ? const NoDataFoundView(
@@ -36,7 +37,7 @@ class DispatchStatusScreen extends StatelessWidget {
                     separatorBuilder: (context, index) => const Divider(),
                     itemCount: orderMemoList.length,
                     itemBuilder: (context, index) {
-                      DispatchStatus item = orderMemoList[index];
+                      Datum item = orderMemoList[index];
 
                       return Container(
                         padding: getPadding(all: 8),
@@ -60,7 +61,7 @@ class DispatchStatusScreen extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: CustomText(
-                                    text: "Order ID - ${item.orNo ?? "N/A"}",
+                                    text: "Order ID - ${item.lrDocNo ?? "N/A"}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       fontSize: getSize(14),
                                       color: AppColors.primaryText4,
@@ -76,7 +77,7 @@ class DispatchStatusScreen extends StatelessWidget {
                                 Expanded(
                                   child: CustomText(
                                     text:
-                                        "Amt - ${item.totalGrossAmt ?? "N/A"}",
+                                        "Amt - ${item.totalAmount ?? "N/A"}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       fontSize: getSize(14),
                                       color: AppColors.primaryText4,
@@ -88,7 +89,7 @@ class DispatchStatusScreen extends StatelessWidget {
                                   flex: 2,
                                   child: CustomText(
                                     text:
-                                        "Status - ${item.dispatchStatus ?? "N/A"}",
+                                        "Status - ${item.status ?? "N/A"}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       fontSize: getSize(14),
                                       color: AppColors.primaryText4,

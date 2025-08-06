@@ -20,7 +20,8 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController customerAliasController = TextEditingController();
+    final TextEditingController customerAliasController =
+        TextEditingController();
     final TextEditingController userNameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController pinCodeController = TextEditingController();
@@ -44,11 +45,13 @@ class SignUpScreen extends StatelessWidget {
                 logV("selectedCountryModel?.id===>${selectedCountryModel?.id}");
                 stateModelList = bloc.stateModelList.where(
                   (element) {
-                    logV("element.countryId.toString()===>${element.countryId.toString()}");
+                    logV(
+                        "element.countryId.toString()===>${element.countryId.toString()}");
                     logV(
                         "selectedCountryModel?.id.toString()===>${selectedCountryModel?.id.toString()}");
                     logV("element===>${element.id.toString()}");
-                    return element.countryId.toString() == selectedCountryModel?.id.toString();
+                    return element.countryId.toString() ==
+                        selectedCountryModel?.id.toString();
                   },
                 ).toList();
               }
@@ -67,11 +70,13 @@ class SignUpScreen extends StatelessWidget {
             if (!bloc.isValueSet && state is SignUpValueChangeState) {
               Map tempData = Singleton.instance.tempRegData;
               logV("tempData==>$tempData");
-              phoneNumberController.text = "${tempData["ISDCode"]} ${tempData["ContactNo"]}";
+              phoneNumberController.text =
+                  "${tempData["ISDCode"]} ${tempData["ContactNo"]}";
               pinCodeController.text = tempData["postalCode"] ?? "";
               try {
                 selectedCountryModel = bloc.countryModelList.firstWhere(
-                  (element) => element.id.toString() == tempData["countryId"].toString(),
+                  (element) =>
+                      element.id.toString() == tempData["countryId"].toString(),
                 );
               } catch (e) {
                 logV("Error while getting county id");
@@ -79,7 +84,8 @@ class SignUpScreen extends StatelessWidget {
               getLustValue();
               try {
                 selectedStateModel = stateModelList.firstWhere(
-                  (element) => element.id.toString() == tempData["stateId"].toString(),
+                  (element) =>
+                      element.id.toString() == tempData["stateId"].toString(),
                 );
               } catch (e) {
                 logV("Error while getting state id");
@@ -87,7 +93,8 @@ class SignUpScreen extends StatelessWidget {
               getLustValue();
               try {
                 selectedCityModel = cityModelList.firstWhere(
-                  (element) => element.id.toString() == tempData["cityId"].toString(),
+                  (element) =>
+                      element.id.toString() == tempData["cityId"].toString(),
                 );
               } catch (e) {
                 logV("Error while getting city id");
@@ -114,7 +121,8 @@ class SignUpScreen extends StatelessWidget {
                         children: [
                           CustomText(
                             text: "SIGN UP",
-                            style: CustomTextStyle.headingText.copyWith(fontSize: getSize(22)),
+                            style: CustomTextStyle.headingText
+                                .copyWith(fontSize: getSize(22)),
                           ),
                           AppTextField(
                             labelText: "Business name",
@@ -154,7 +162,8 @@ class SignUpScreen extends StatelessWidget {
                                 : stateModelList.isEmpty
                                     ? "No State Found"
                                     : null,
-                            enabled: stateModelList.isNotEmpty && selectedCountryModel != null,
+                            enabled: stateModelList.isNotEmpty &&
+                                selectedCountryModel != null,
                             height2: getSize(47),
                             stateModelList,
                             (p0) => p0.stateName ?? "",
@@ -174,7 +183,8 @@ class SignUpScreen extends StatelessWidget {
                                     ? "No City Found"
                                     : null,
                             customLabel: SizedBox(),
-                            enabled: cityModelList.isNotEmpty && selectedStateModel != null,
+                            enabled: cityModelList.isNotEmpty &&
+                                selectedStateModel != null,
                             height2: getSize(47),
                             cityModelList,
                             (p0) => p0.cityName ?? "",
@@ -200,25 +210,34 @@ class SignUpScreen extends StatelessWidget {
                             child: CustomButton(
                               text: "SIGN UP",
                               onPressed: () {
-                                if (customerAliasController.text.trim().isEmpty) {
+                                if (customerAliasController.text
+                                    .trim()
+                                    .isEmpty) {
                                   showToast("Please enter customer alias");
                                   HapticFeedback.vibrate();
-                                } else if (userNameController.text.trim().isEmpty) {
+                                } else if (userNameController.text
+                                    .trim()
+                                    .isEmpty) {
                                   showToast("Please enter username");
                                   HapticFeedback.vibrate();
-                                } else if (emailController.text.trim().isEmpty) {
-                                  showToast("Please enter email address");
-                                  HapticFeedback.vibrate();
-                                } else if (!RegExp(
-                                        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-                                    .hasMatch(emailController.text.trim())) {
-                                  showToast("Invalid email address");
-                                  HapticFeedback.vibrate();
-                                } else if (pinCodeController.text.trim().isEmpty) {
+                                }
+                                // else if (emailController.text.trim().isEmpty) {
+                                //   showToast("Please enter email address");
+                                //   HapticFeedback.vibrate();
+                                // } else if (!RegExp(
+                                //         r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                                //     .hasMatch(emailController.text.trim())) {
+                                //   showToast("Invalid email address");
+                                //   HapticFeedback.vibrate();
+                                // }
+                                else if (pinCodeController.text
+                                    .trim()
+                                    .isEmpty) {
                                   showToast("Please enter pin code");
                                   HapticFeedback.vibrate();
                                 } else if (pinCodeController.text.length != 6 ||
-                                    !RegExp(r"^[0-9]+$").hasMatch(pinCodeController.text.trim())) {
+                                    !RegExp(r"^[0-9]+$").hasMatch(
+                                        pinCodeController.text.trim())) {
                                   showToast("Invalid pin code");
                                   HapticFeedback.vibrate();
                                 } else if (selectedCountryModel == null) {
@@ -232,15 +251,21 @@ class SignUpScreen extends StatelessWidget {
                                   HapticFeedback.vibrate();
                                 } else {
                                   var body = {
-                                    "customer_alias": customerAliasController.text,
+                                    "customer_alias":
+                                        customerAliasController.text,
                                     "contact_person": userNameController.text,
-                                    "countryid": selectedCountryModel?.id.toString(),
-                                    "stateid": selectedStateModel?.id.toString(),
+                                    "countryid":
+                                        selectedCountryModel?.id.toString(),
+                                    "stateid":
+                                        selectedStateModel?.id.toString(),
                                     "cityid": selectedCityModel?.id.toString(),
-                                    "countryName": selectedCountryModel?.countryName,
+                                    "countryName":
+                                        selectedCountryModel?.countryName,
                                     "customer_pincode": pinCodeController.text,
-                                    "customer_isd_code": Singleton.instance.tempRegData["ISDCode"],
-                                    "contact_no": Singleton.instance.tempRegData["ContactNo"],
+                                    "customer_isd_code": Singleton
+                                        .instance.tempRegData["ISDCode"],
+                                    "contact_no": Singleton
+                                        .instance.tempRegData["ContactNo"],
                                     "email": emailController.text,
                                     "TransactionTermName": "",
                                     "customer_std_code": "",

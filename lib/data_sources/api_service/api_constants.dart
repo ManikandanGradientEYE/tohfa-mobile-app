@@ -38,6 +38,7 @@ class ApiConstants {
   static const String visitStatus = "$baseUrl/CustomerRequest/visitstatus";
   static const String getSection = "$baseUrl/CustomerRequest/sections";
   static const String generateToken = "$baseUrl/CustomerRequest/GenerateToken";
+  static const String deleteAccount = "$baseUrl/CustomerRequest/InActivate";
   static const String foodOrder = "$baseUrl/CustomerRequest/FoodOrder";
   static const String myQR = "$baseUrl/CustomerRequest/MyQR";
   static const String notifications = "$baseUrl/CustomerRequest/notifications";
@@ -53,6 +54,7 @@ class ApiConstants {
   static const String getToken = "$baseUrl/CustomerRequest/Tokens";
   static const String downloadOrderMemo =
       "$baseUrl/CustomerRequest/downloadordermemo";
+  // "https://thf.initpos.in/api/CustomerRequest/downloadordermemo";
   static const String getDispatchStatus =
       "$baseUrl/CustomerRequest/DispatchStatus";
   static const String getInvoices = "$baseUrl/CustomerRequest/Invoices";

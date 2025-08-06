@@ -1,3 +1,5 @@
+import 'package:demo/features/auth/sign_in/model/customer_site_id_model.dart';
+import 'package:demo/features/auth/sign_up/data/model/signUp_res_model.dart';
 import 'package:demo/features/auth/sign_up/presentation/bloc/sign_up_state.dart';
 
 import '../../../../../export.dart';
@@ -124,17 +126,13 @@ class SignUpCubit extends Cubit<SignUpState> with ApiClientMixin {
         onValueChange();
         if (response.data != null) {
           try {
-            logV(
-                "Singleton.instance.tempRegData==>${Singleton.instance.tempRegData}");
-            Singleton.instance.tempRegData["cityId"] =
-                response.data["data"]["cityId"].toString();
-            Singleton.instance.tempRegData["stateId"] =
-                response.data["data"]["stateId"].toString();
+            logV("Singleton.instance.tempRegData==>${Singleton.instance.tempRegData}");
+            Singleton.instance.tempRegData["cityId"] = response.data["data"]["cityId"].toString();
+            Singleton.instance.tempRegData["stateId"] = response.data["data"]["stateId"].toString();
             Singleton.instance.tempRegData["countryId"] =
                 response.data["data"]["countryId"].toString();
             Singleton.instance.tempRegData["postalCode"] = postalCode;
-            logV(
-                "Singleton.instance.tempRegData==>${Singleton.instance.tempRegData}");
+            logV("Singleton.instance.tempRegData==>${Singleton.instance.tempRegData}");
           } catch (e) {
             logV("Error===>$e");
           }
@@ -229,6 +227,8 @@ class SignUpCubit extends Cubit<SignUpState> with ApiClientMixin {
     }
   }
 
+  SignUpResponseModel signUpResponse = SignUpResponseModel();
+
   ///Sign Up
   signUp(var body) async {
     emit(SignUpLoadingState());
@@ -242,8 +242,24 @@ class SignUpCubit extends Cubit<SignUpState> with ApiClientMixin {
 
       if (response.success) {
         showToast("Your details submitted successfully for verification");
+
+        signUpResponse = SignUpResponseModel.fromJson(response.data["data"]);
+
+        log(jsonEncode(signUpResponse.toJson()), name: "SIGNUP RESPONSE MODEL");
+
+        SharedPref.instance.setUserToken(authToken: "${response.data["token"]}");
+        final authtoken = await SharedPref.instance.getUserToken();
+        log("$authtoken", name: "AUTH TOKEN FROM SIGNUP API");
+
+        await getCustomerSiteId(signUpResponse.id, signUpResponse);
+        await SharedPref.instance.setUserData(customerSiteidList.first);
+        await SharedPref.instance.setUserOtherData(UserOtherDataModel(
+          createdOn: signUpResponse.createdOn,
+          tierName: signUpResponse.tierName,
+          totalPurchaseValue: signUpResponse.totalPurchaseValue,
+        ));
         onValueChange();
-        NavigatorService.pushNamedAndRemoveUntil(AppRoutes.sendOtpScreen);
+        NavigatorService.pushNamedAndRemoveUntil(AppRoutes.dashBoardScreen);
       } else {
         showToast(response.errorMessage ?? AppStrings.somethingWentWrong);
       }
@@ -251,6 +267,32 @@ class SignUpCubit extends Cubit<SignUpState> with ApiClientMixin {
       showToast(AppStrings.somethingWentWrong);
       logV("Error===>$e");
     } finally {
+      onValueChange();
+    }
+  }
+
+  List<CustomerSiteIdModel> customerSiteidList = [];
+
+  ///Get customer Site Id
+  getCustomerSiteId(String id, SignUpResponseModel signUpResponse) async {
+    try {
+      final response = await apiClient.get(
+        headers: Singleton.instance.getAuthHeaders(withType: true),
+        "${ApiConstants.customerSite}?customerId=$id",
+        (p0) => p0,
+      );
+
+      if (response.success) {
+        if (response.data["data"] != null) {
+          customerSiteidList = customerSiteIdModelFromJson(jsonEncode(response.data["data"]));
+        }
+      } else {
+        showToast(response.errorMessage ?? AppStrings.somethingWentWrong);
+        onValueChange();
+      }
+    } catch (e) {
+      showToast(AppStrings.somethingWentWrong);
+      logV("Error===>$e");
       onValueChange();
     }
   }

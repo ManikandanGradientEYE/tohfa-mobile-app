@@ -19,10 +19,8 @@ class ProfileBlocCubit extends Cubit<ProfileBlocState> with ApiClientMixin {
   List<VisitStatusModel> visitStatusModel = [];
   List<SectionModel> sectionModel = [];
 
-  void onDropDownValueChange(
-      {required String value, required bool isCustomerSite}) {
-    emit(
-        DropDownValueChangeState(value: value, isCustomerSite: isCustomerSite));
+  void onDropDownValueChange({required String value, required bool isCustomerSite}) {
+    emit(DropDownValueChangeState(value: value, isCustomerSite: isCustomerSite));
   }
 
   ///Get customer Site Id
@@ -36,8 +34,7 @@ class ProfileBlocCubit extends Cubit<ProfileBlocState> with ApiClientMixin {
 
       if (response.success) {
         if (response.data["data"] != null) {
-          customerSiteModel =
-              customerSiteIdModelFromJson(jsonEncode(response.data["data"]));
+          customerSiteModel = customerSiteIdModelFromJson(jsonEncode(response.data["data"]));
           log("$customerSiteModel", name: "Customer Site ID");
         }
       } else {
@@ -76,14 +73,34 @@ class ProfileBlocCubit extends Cubit<ProfileBlocState> with ApiClientMixin {
     required String sectionId,
     required String siteId,
   }) async {
-    Object? body = json.encode({
-      "CustomerSite": customerSite,
-      "SectionId": sectionId,
-      "siteid": siteId
-    });
+    Object? body =
+        json.encode({"CustomerSite": customerSite, "SectionId": sectionId, "siteid": siteId});
     try {
-      final response = await apiClient
-          .post(ApiConstants.generateToken, (p0) => p0, body: body);
+      final response = await apiClient.post(ApiConstants.generateToken, (p0) => p0, body: body);
+      if (response.success) {
+        return response.data["data"];
+      } else {
+        return "";
+      }
+    } catch (e) {
+      showToast(AppStrings.somethingWentWrong);
+      logV("Generate token error===>$e");
+      return "";
+    }
+  }
+
+  deleteAccount({
+    required String customerSiteId,
+  }) async {
+    Object? body = json.encode({
+      "CustomerSiteId": customerSiteId,
+    });
+
+    try {
+      log(ApiConstants.deleteAccount, name: "DELETE ACCOUNT API URL");
+      final response = await apiClient.post(
+          "${ApiConstants.deleteAccount}?CustomerSiteId=$customerSiteId", (p0) => p0);
+      log("${response.data}", name: "DELETE ACCOUNT RESPONSE");
       if (response.success) {
         return response.data["data"];
       } else {
@@ -108,8 +125,7 @@ class ProfileBlocCubit extends Cubit<ProfileBlocState> with ApiClientMixin {
       );
       if (response.success) {
         if (response.data["data"] != null) {
-          CustomerSiteIdModel profile =
-              CustomerSiteIdModel.fromJson(response.data["data"]);
+          CustomerSiteIdModel profile = CustomerSiteIdModel.fromJson(response.data["data"]);
           await SharedPref.instance.setUserData(profile);
           await getCustomerSiteId(profile.customerId.toString());
           try {

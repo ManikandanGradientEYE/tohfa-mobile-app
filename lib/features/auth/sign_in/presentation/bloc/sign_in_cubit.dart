@@ -60,6 +60,8 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
       {bool isResend = false,
       bool isFromEditProfile = false,
       dynamic bodyForUpdateProfile,
+      bool isForDeleteAccount = false,
+      String customerSiteId = "",
       required BuildContext context}) async {
     emit(SignInLoadingState());
     try {
@@ -67,9 +69,7 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
       final response = await apiClient.post(
         body: jsonEncode(body),
         headers: Singleton.instance.getAuthHeaders(withType: true),
-        isUserFromReg
-            ? ApiConstants.generateAndSendOtp
-            : ApiConstants.signInUsingMobile,
+        isUserFromReg ? ApiConstants.generateAndSendOtp : ApiConstants.signInUsingMobile,
         (p0) => p0,
       );
       logV("response===>${response.data}");
@@ -85,14 +85,28 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
         }
         onValueChange();
         if (isFromEditProfile == true) {
-          log(bodyForUpdateProfile.toString(),
-              name: "UPDATE BODY PASS FROM SEND OTP");
+          log(bodyForUpdateProfile.toString(), name: "UPDATE BODY PASS FROM SEND OTP");
           NavigatorService.pushNamed(
             AppRoutes.verifyOtpScreen,
             arguments: {
               'isUserFromReg': isUserFromReg,
               'isFromEditScreen': true,
               'bodyForUpdateProfile': bodyForUpdateProfile
+            },
+          );
+        } else if (isForDeleteAccount == true) {
+          log(customerSiteId, name: "CUSTOMER SITE ID FOR DELETE ACCOUNT");
+          log(phone, name: "PHONE FOR DELETE ACCOUNT");
+          log(code, name: "PHONE CODE DELETE ACCOUNT");
+          NavigatorService.goBack();
+          NavigatorService.pushNamed(
+            AppRoutes.verifyOtpScreen,
+            arguments: {
+              'isUserFromReg': isUserFromReg,
+              'isFromEditScreen': false,
+              'isForDeleteAccount': true,
+              'customerSiteId': customerSiteId,
+              'bodyForUpdateProfile': {}
             },
           );
         } else {
@@ -108,8 +122,7 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
       } else {
         String message = response.errorMessage ?? AppStrings.somethingWentWrong;
 
-        await customAlertDialog(
-            title: "Error", message: message, waitForDialogClose: true);
+        await customAlertDialog(title: "Error", message: message, waitForDialogClose: true);
         onValueChange();
       }
     } catch (e) {
@@ -119,8 +132,14 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
     }
   }
 
+  List<LoginResponseModel> loginResponse = [];
+
   verifyOtp(String phone, String code, String otp,
-      {bool isFromEditScreen = false, dynamic bodyForUpdateProfile}) async {
+      {bool isFromEditScreen = false,
+      dynamic bodyForUpdateProfile,
+      bool isForDeleteAccount = false,
+      BuildContext? context,
+      String customerSiteId = ""}) async {
     emit(SignInLoadingState());
     try {
       isLoading = true;
@@ -134,12 +153,20 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
           isLoginScreen: true);
 
       if (response.success) {
+        // loginResponse.clear();
         if (isFromEditScreen == true) {
           if (bodyForUpdateProfile != {}) {
-            log(bodyForUpdateProfile.toString(),
-                name: "BODY FOR UPDATE PROFILE");
-            await editProfileCubit.updateProfile(bodyForUpdateProfile,
-                isFromEdit: true);
+            log(bodyForUpdateProfile.toString(), name: "BODY FOR UPDATE PROFILE");
+            await editProfileCubit.updateProfile(bodyForUpdateProfile, isFromEdit: true);
+
+            isLoading = false;
+          }
+        } else if (isForDeleteAccount == true) {
+          if (customerSiteId != "") {
+            log(customerSiteId.toString(), name: "CUSTOMER SITE ID FOR DELETE ACCOUNT");
+            await editProfileCubit.deleteAccount(
+                customerSiteId: customerSiteId, isForDeleteAccount: true);
+
             isLoading = false;
           }
         } else {
@@ -152,13 +179,14 @@ class SignInCubit extends Cubit<SignInState> with ApiClientMixin {
             return;
           }
           if (response.data["data"] != null) {
-            List<LoginResponseModel> loginResponse =
-                loginResponseModelFromJson(jsonEncode(response.data["data"]));
+            // List<LoginResponseModel> loginResponse =
+            //     loginResponseModelFromJson(jsonEncode(response.data["data"]));
+            loginResponse = loginResponseModelFromJson(jsonEncode(response.data["data"]));
 
-            SharedPref.instance
-                .setUserToken(authToken: "${response.data["token"]}");
+            SharedPref.instance.setUserToken(authToken: "${response.data["token"]}");
             final authtoken = await SharedPref.instance.getUserToken();
             log("$authtoken", name: "AUTH TOKEN FROM LOGIN API");
+
             emit(SignInSuccessState(loginResponse));
           }
         }
@@ -565,8 +593,7 @@ var listOfrecord = {
       "pricelistId": "1",
       "company_type": null,
       "industry_type": "",
-      "product_type":
-          "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+      "product_type": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
       "brand_name": "",
       "director_owner_name": "",
       "contact_person": "John Doe",

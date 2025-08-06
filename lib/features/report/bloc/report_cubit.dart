@@ -16,6 +16,7 @@ class ReportCubit extends Cubit<ReportState> with ApiClientMixin {
   // final String? customerSiteId = "68";
   bool isLoading = false;
   final String? customerSiteId = Singleton.instance.userData?.id;
+  final String? customerSiteName = Singleton.instance.userData?.customerSiteName;
   final String? customerId = Singleton.instance.userData?.customerId;
 
   ReportCubit() : super(ReportInitial());
@@ -31,8 +32,7 @@ class ReportCubit extends Cubit<ReportState> with ApiClientMixin {
       if (response.success) {
         // sectionModel = sectionModelFromJson(jsonEncode(response.data));
         emit(OrderMemoSuccessState(
-            orderMemoModel:
-                orderMemoResModelFromJson(jsonEncode(response.data))));
+            orderMemoModel: orderMemoResModelFromJson(jsonEncode(response.data))));
       } else {
         emit(ReportErrorState(errorMessage: response.errorMessage));
       }
@@ -74,16 +74,16 @@ class ReportCubit extends Cubit<ReportState> with ApiClientMixin {
     }
   }
 
-  downloadOrderMemo(String orderMemoId) async {
+  downloadOrderMemo(String orderMemoId, String siteId) async {
     isLoading = true;
     onOrderMemoSuccess();
+    String authToken = await SharedPref.instance.getUserToken() ?? "";
     try {
       final url = Uri.parse(
-          "${ApiConstants.downloadOrderMemo}?orderMemoId=$orderMemoId&siteId=$customerSiteId&Barcode=false");
-      final response = await get(
-        url,
-      );
-
+          "${ApiConstants.downloadOrderMemo}?orderMemoId=$orderMemoId&siteId=$siteId&Barcode=true");
+      final response = await get(url, headers: {
+        "Authorization": "Bearer $authToken",
+      });
       isLoading = false;
       if (response.statusCode == 200) {
         // Save PDF to file
@@ -163,14 +163,13 @@ class ReportCubit extends Cubit<ReportState> with ApiClientMixin {
     try {
       final response = await apiClient.get(
         // "${ApiConstants.getOrderMemo}?customerSiteId=${Singleton.instance.userData?.id}",
-        "${ApiConstants.getDispatchStatus}?customerSiteId=$customerSiteId",
+        "${ApiConstants.getDispatchStatus}?customerSiteId=$customerSiteId&customerSiteName=$customerSiteName",
         (p0) => p0,
       );
       if (response.success) {
         // sectionModel = sectionModelFromJson(jsonEncode(response.data));
         emit(DispatchStatusSuccessState(
-            dispatchStatusResModel:
-                dispatchStatusResModelFromJson(jsonEncode(response.data))));
+            dispatchStatusResModel: dispatchStatusResModelFromJson(jsonEncode(response.data))));
       } else {
         emit(ReportErrorState(errorMessage: response.errorMessage));
       }
@@ -191,8 +190,7 @@ class ReportCubit extends Cubit<ReportState> with ApiClientMixin {
       if (response.success) {
         // sectionModel = sectionModelFromJson(jsonEncode(response.data));
         emit(InvoicesSuccessState(
-            invoicesResModel:
-                invoicesResModelFromJson(jsonEncode(response.data))));
+            invoicesResModel: invoicesResModelFromJson(jsonEncode(response.data))));
       } else {
         emit(ReportErrorState(errorMessage: response.errorMessage));
       }
@@ -212,8 +210,7 @@ class ReportCubit extends Cubit<ReportState> with ApiClientMixin {
       if (response.success) {
         // sectionModel = sectionModelFromJson(jsonEncode(response.data));
         emit(PastFoodOrderSuccessState(
-            pastFoodOrderResModel:
-                pastFoodOrderResModelFromJson(jsonEncode(response.data))));
+            pastFoodOrderResModel: pastFoodOrderResModelFromJson(jsonEncode(response.data))));
       } else {
         emit(ReportErrorState(errorMessage: response.errorMessage));
       }

@@ -139,7 +139,8 @@ class OrderMemoScreen extends StatelessWidget {
                                           InkWell(
                                             onTap: () {
                                               bloc.downloadOrderMemo(
-                                                  item.id.toString());
+                                                  item.id.toString(),
+                                                  item.siteId.toString());
                                             },
                                             child: Container(
                                               padding: getPadding(all: 4),

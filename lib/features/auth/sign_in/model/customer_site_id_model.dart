@@ -7,8 +7,7 @@ import 'dart:convert';
 UserOtherDataModel userOtherDataModelFromJson(String str) =>
     UserOtherDataModel.fromJson(json.decode(str));
 
-String userOtherDataModelToJson(UserOtherDataModel data) =>
-    json.encode(data.toJson());
+String userOtherDataModelToJson(UserOtherDataModel data) => json.encode(data.toJson());
 
 class UserOtherDataModel {
   dynamic createdOn;
@@ -32,8 +31,7 @@ class UserOtherDataModel {
         tierName: tierName ?? this.tierName,
       );
 
-  factory UserOtherDataModel.fromJson(Map<String, dynamic> json) =>
-      UserOtherDataModel(
+  factory UserOtherDataModel.fromJson(Map<String, dynamic> json) => UserOtherDataModel(
         createdOn: json["createdOn"],
         totalPurchaseValue: json["totalPurchaseValue"],
         tierName: json["tier_name"],
@@ -47,8 +45,7 @@ class UserOtherDataModel {
 }
 
 List<CustomerSiteIdModel> customerSiteIdModelFromJson(String str) =>
-    List<CustomerSiteIdModel>.from(
-        json.decode(str).map((x) => CustomerSiteIdModel.fromJson(x)));
+    List<CustomerSiteIdModel>.from(json.decode(str).map((x) => CustomerSiteIdModel.fromJson(x)));
 
 String customerSiteIdModelToJson(List<CustomerSiteIdModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -141,6 +138,7 @@ class CustomerSiteIdModel {
   dynamic priceList;
   dynamic transporterName;
   dynamic notificationCount;
+  String? ogContactNo;
   dynamic id;
   dynamic createdBy;
   dynamic createdOn;
@@ -166,6 +164,7 @@ class CustomerSiteIdModel {
     this.customerBillAddress2,
     this.customerBillLandmark,
     this.notificationCount,
+    this.ogContactNo,
     this.customerBillArea,
     this.customerBillDistrict,
     this.customerBillCity,
@@ -332,6 +331,7 @@ class CustomerSiteIdModel {
     dynamic priceList,
     dynamic transporterName,
     dynamic notificationCount,
+    String? ogContactNo,
     dynamic id,
     dynamic createdBy,
     dynamic createdOn,
@@ -353,6 +353,7 @@ class CustomerSiteIdModel {
           transporterId: transporterId ?? transporterId,
           billContactPerson: billContactPerson ?? billContactPerson,
           notificationCount: notificationCount ?? notificationCount,
+          ogContactNo: ogContactNo ?? this.ogContactNo,
           billContactNo: billContactNo ?? billContactNo,
           customerBillAddress1: customerBillAddress1 ?? customerBillAddress1,
           customerBillAddress2: customerBillAddress2 ?? customerBillAddress2,
@@ -368,17 +369,12 @@ class CustomerSiteIdModel {
           customerBillPhone1: customerBillPhone1 ?? customerBillPhone1,
           customerBillPhone2: customerBillPhone2 ?? customerBillPhone2,
           customerBillPhone3: customerBillPhone3 ?? customerBillPhone3,
-          customerBillDefaultWhatsapp:
-              customerBillDefaultWhatsapp ?? customerBillDefaultWhatsapp,
-          customerBillWhatsappNo1:
-              customerBillWhatsappNo1 ?? customerBillWhatsappNo1,
-          customerBillWhatsappNo2:
-              customerBillWhatsappNo2 ?? customerBillWhatsappNo2,
-          customerBillWhatsappNo3:
-              customerBillWhatsappNo3 ?? customerBillWhatsappNo3,
+          customerBillDefaultWhatsapp: customerBillDefaultWhatsapp ?? customerBillDefaultWhatsapp,
+          customerBillWhatsappNo1: customerBillWhatsappNo1 ?? customerBillWhatsappNo1,
+          customerBillWhatsappNo2: customerBillWhatsappNo2 ?? customerBillWhatsappNo2,
+          customerBillWhatsappNo3: customerBillWhatsappNo3 ?? customerBillWhatsappNo3,
           customerBillEmail: customerBillEmail ?? customerBillEmail,
-          customerBillAlternateEmail:
-              customerBillAlternateEmail ?? customerBillAlternateEmail,
+          customerBillAlternateEmail: customerBillAlternateEmail ?? customerBillAlternateEmail,
           customerBillWebsite: customerBillWebsite ?? customerBillWebsite,
           customerBillGstin: customerBillGstin ?? customerBillGstin,
           customerBillGstinDate: customerBillGstinDate ?? customerBillGstinDate,
@@ -400,17 +396,12 @@ class CustomerSiteIdModel {
           customerShipPhone1: customerShipPhone1 ?? customerShipPhone1,
           customerShipPhone2: customerShipPhone2 ?? customerShipPhone2,
           customerShipPhone3: customerShipPhone3 ?? customerShipPhone3,
-          customerShipDefaultWhatsapp:
-              customerShipDefaultWhatsapp ?? customerShipDefaultWhatsapp,
-          customerShipWhatsappNo1:
-              customerShipWhatsappNo1 ?? customerShipWhatsappNo1,
-          customerShipWhatsappNo2:
-              customerShipWhatsappNo2 ?? customerShipWhatsappNo2,
-          customerShipWhatsappNo3:
-              customerShipWhatsappNo3 ?? customerShipWhatsappNo3,
+          customerShipDefaultWhatsapp: customerShipDefaultWhatsapp ?? customerShipDefaultWhatsapp,
+          customerShipWhatsappNo1: customerShipWhatsappNo1 ?? customerShipWhatsappNo1,
+          customerShipWhatsappNo2: customerShipWhatsappNo2 ?? customerShipWhatsappNo2,
+          customerShipWhatsappNo3: customerShipWhatsappNo3 ?? customerShipWhatsappNo3,
           customerShipEmail: customerShipEmail ?? customerShipEmail,
-          customerShipAlternateEmail:
-              customerShipAlternateEmail ?? customerShipAlternateEmail,
+          customerShipAlternateEmail: customerShipAlternateEmail ?? customerShipAlternateEmail,
           customerShipWebsite: customerShipWebsite ?? customerShipWebsite,
           customerShipGstin: customerShipGstin ?? customerShipGstin,
           customerShipGstinDate: customerShipGstinDate ?? customerShipGstinDate,
@@ -422,10 +413,8 @@ class CustomerSiteIdModel {
           tradeGroupName: tradeGroupName ?? tradeGroupName,
           termName: termName ?? termName,
           customersiteLoginNo: customersiteLoginNo ?? customersiteLoginNo,
-          customersiteShipWhatsappNo:
-              customersiteShipWhatsappNo ?? customersiteShipWhatsappNo,
-          customersiteBillWhatsappNo:
-              customersiteBillWhatsappNo ?? customersiteBillWhatsappNo,
+          customersiteShipWhatsappNo: customersiteShipWhatsappNo ?? customersiteShipWhatsappNo,
+          customersiteBillWhatsappNo: customersiteBillWhatsappNo ?? customersiteBillWhatsappNo,
           membershipCode: membershipCode ?? membershipCode,
           id: id ?? id,
           createdBy: createdBy ?? createdBy,
@@ -435,20 +424,16 @@ class CustomerSiteIdModel {
           isActive: isActive ?? isActive,
           agentName: agentName ?? agentName,
           customerBillCityName: customerBillCityName ?? customerBillCityName,
-          customerBillCountryName:
-              customerBillCountryName ?? customerBillCountryName,
+          customerBillCountryName: customerBillCountryName ?? customerBillCountryName,
           // customerShipStateName: customerShipStateName ?? customerShipStateName
-          customerShipStateName:
-              customerShipStateName ?? this.customerShipStateName);
+          customerShipStateName: customerShipStateName ?? this.customerShipStateName);
 
-  factory CustomerSiteIdModel.fromJson(Map<String, dynamic> json) =>
-      CustomerSiteIdModel(
+  factory CustomerSiteIdModel.fromJson(Map<String, dynamic> json) => CustomerSiteIdModel(
         customerSiteName: json["customer_site_name"],
         customerSiteShortName: json["customer_site_short_name"],
         customerName: json["customer_name"],
         classType: json["classType"],
-        customerId:
-            json["customerId"] != null ? json["customerId"].toString() : "",
+        customerId: json["customerId"] != null ? json["customerId"].toString() : "",
         priceListName: json["price_list_name"],
         agentPercentage: json["agent_percentage"],
         tradegroupId: json["tradegroupId"],
@@ -485,6 +470,7 @@ class CustomerSiteIdModel {
         shipContactPerson: json["ship_contact_person"],
         shipContactNo: json["ship_contact_no"],
         notificationCount: (json["notification_count"] ?? 0).toString(),
+        ogContactNo: json["og_contact_no"],
         customerShipAddress1: json["customer_ship_address1"],
         customerShipAddress2: json["customer_ship_address2"],
         customerShipLandmark: json["customer_ship_landmark"],
@@ -561,6 +547,7 @@ class CustomerSiteIdModel {
         "customer_bill_city": customerBillCity?.toString() ?? "",
         "customer_bill_pincode": customerBillPincode?.toString() ?? "",
         "notification_count": notificationCount?.toString() ?? "",
+        "og_contact_no": ogContactNo.toString(),
         "customer_bill_state": customerBillState?.toString() ?? "",
         "customer_bill_country": customerBillCountry?.toString() ?? "",
         "customer_bill_isd_code": customerBillIsdCode?.toString() ?? "",
@@ -568,14 +555,12 @@ class CustomerSiteIdModel {
         "customer_bill_phone1": customerBillPhone1?.toString() ?? "",
         "customer_bill_phone2": customerBillPhone2?.toString() ?? "",
         "customer_bill_phone3": customerBillPhone3?.toString() ?? "",
-        "customer_bill_default_whatsapp":
-            customerBillDefaultWhatsapp?.toString() ?? "",
+        "customer_bill_default_whatsapp": customerBillDefaultWhatsapp?.toString() ?? "",
         "customer_bill_whatsapp_no1": customerBillWhatsappNo1?.toString() ?? "",
         "customer_bill_whatsapp_no2": customerBillWhatsappNo2?.toString() ?? "",
         "customer_bill_whatsapp_no3": customerBillWhatsappNo3?.toString() ?? "",
         "customer_bill_email": customerBillEmail?.toString() ?? "",
-        "customer_bill_alternate_email":
-            customerBillAlternateEmail?.toString() ?? "",
+        "customer_bill_alternate_email": customerBillAlternateEmail?.toString() ?? "",
         "customer_bill_website": customerBillWebsite?.toString() ?? "",
         "customer_bill_gstin": customerBillGstin?.toString() ?? "",
         "customer_bill_gstin_date": customerBillGstinDate?.toString() ?? "",
@@ -597,14 +582,12 @@ class CustomerSiteIdModel {
         "customer_ship_phone1": customerShipPhone1?.toString() ?? "",
         "customer_ship_phone2": customerShipPhone2?.toString() ?? "",
         "customer_ship_phone3": customerShipPhone3?.toString() ?? "",
-        "customer_ship_default_whatsapp":
-            customerShipDefaultWhatsapp?.toString() ?? "",
+        "customer_ship_default_whatsapp": customerShipDefaultWhatsapp?.toString() ?? "",
         "customer_ship_whatsapp_no1": customerShipWhatsappNo1?.toString() ?? "",
         "customer_ship_whatsapp_no2": customerShipWhatsappNo2?.toString() ?? "",
         "customer_ship_whatsapp_no3": customerShipWhatsappNo3?.toString() ?? "",
         "customer_ship_email": customerShipEmail?.toString() ?? "",
-        "customer_ship_alternate_email":
-            customerShipAlternateEmail?.toString() ?? "",
+        "customer_ship_alternate_email": customerShipAlternateEmail?.toString() ?? "",
         "customer_ship_website": customerShipWebsite?.toString() ?? "",
         "customer_ship_gstin": customerShipGstin?.toString() ?? "",
         "customer_ship_gstin_date": customerShipGstinDate?.toString() ?? "",
@@ -616,10 +599,8 @@ class CustomerSiteIdModel {
         "trade_group_name": tradeGroupName?.toString() ?? "",
         "term_name": termName?.toString() ?? "",
         "customersite_login_no": customersiteLoginNo?.toString() ?? "",
-        "customersite_ship_whatsapp_no":
-            customersiteShipWhatsappNo?.toString() ?? "",
-        "customersite_bill_whatsapp_no":
-            customersiteBillWhatsappNo?.toString() ?? "",
+        "customersite_ship_whatsapp_no": customersiteShipWhatsappNo?.toString() ?? "",
+        "customersite_bill_whatsapp_no": customersiteBillWhatsappNo?.toString() ?? "",
         "membershipCode": membershipCode?.toString() ?? "",
         "id": id.toString(),
         "isActive": isActive.toString(),

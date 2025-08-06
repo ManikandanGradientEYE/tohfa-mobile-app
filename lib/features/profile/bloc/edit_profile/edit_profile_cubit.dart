@@ -165,6 +165,48 @@ class EditProfileCubit extends Cubit<EditProfileState> with ApiClientMixin {
     }
   }
 
+  deleteAccount({
+    bool isForDeleteAccount = false,
+    required String customerSiteId,
+  }) async {
+    // Object? body = json.encode({
+    //   "CustomerSiteId": customerSiteId,
+    // });
+
+    try {
+      log(ApiConstants.deleteAccount, name: "DELETE ACCOUNT API URL");
+      final response = await apiClient.post(
+          "${ApiConstants.deleteAccount}?CustomerSiteId=$customerSiteId", (p0) => p0);
+      log("${response.data}", name: "DELETE ACCOUNT RESPONSE");
+      log("${response.success}", name: "DELETE ACCOUNT SUCCESS");
+      if (response.data["succeeded"] == true) {
+        // showToast(response.data["messages"].toString());
+        NavigatorService.goBack();
+        SharedPref.instance.logOut();
+        NavigatorService.pushNamedAndRemoveUntil(AppRoutes.sendOtpScreen);
+        onValueChange();
+      } else {}
+      // if (response.success) {
+      //   showToast(response.data["message"]);
+      //   NavigatorService.goBack();
+      //   SharedPref.instance.logOut();
+      //   NavigatorService.pushNamedAndRemoveUntil(AppRoutes.sendOtpScreen);
+      //   // if (isForDeleteAccount == true) {
+      //   //   NavigatorService.goBack();
+      //   //   NavigatorService.goBack(arguments: true);
+      //   // } else {
+      //   //   NavigatorService.goBack(arguments: true);
+      //   // }
+      //   onValueChange();
+      //   // return response.data["data"];
+      // }
+    } catch (e) {
+      showToast(AppStrings.somethingWentWrong);
+    } finally {
+      onValueChange();
+    }
+  }
+
   onValueChange() {
     emit(EditProfileValueChangeState());
   }
