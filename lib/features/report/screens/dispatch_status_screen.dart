@@ -26,9 +26,7 @@ class DispatchStatusScreen extends StatelessWidget {
               message: state.errorMessage,
             );
           } else if (state is DispatchStatusSuccessState) {
-       
-            List<Datum> orderMemoList =
-                state.dispatchStatusResModel.data ?? [];
+            List<Datum> orderMemoList = state.dispatchStatusResModel.data ?? [];
             return orderMemoList.isEmpty
                 ? const NoDataFoundView(
                     message: "No Dispatch Status Found",
@@ -45,39 +43,59 @@ class DispatchStatusScreen extends StatelessWidget {
                           spacing: getSize(5),
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            CustomText(
+                              text: "LR Doc No: ${item.lrDocNo ?? "N/A"}",
+                              style: CustomTextStyle.bodyText.copyWith(
+                                color: AppColors.primaryText3,
+                                fontSize: getSize(14),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            CustomText(
+                              text: "LR Dated: ${item.lrDocDate ?? "N/A"}",
+                              style: CustomTextStyle.bodyText.copyWith(
+                                color: AppColors.primaryText3,
+                                fontSize: getSize(14),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             Row(
-                              spacing: getSize(10),
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  child: CustomText(
-                                    text: "Remarks - s${item.remarks ?? "N/A"}",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      color: AppColors.primaryText3,
-                                      fontSize: getSize(14),
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                CustomText(
+                                  text:
+                                      "Type: ${item.transactionType ?? "N/A"}",
+                                  style: CustomTextStyle.bodyText.copyWith(
+                                    fontSize: getSize(14),
+                                    color: AppColors.primaryText4,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 2,
-                                  child: CustomText(
-                                    text: "Order ID - ${item.lrDocNo ?? "N/A"}",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      fontSize: getSize(14),
-                                      color: AppColors.primaryText4,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                CustomText(
+                                  text:
+                                      "Transporter: ${item.transporterName ?? "N/A"}",
+                                  style: CustomTextStyle.bodyText.copyWith(
+                                    fontSize: getSize(14),
+                                    color: AppColors.primaryText4,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ],
+                            ),
+                            CustomText(
+                              text: "Value: ${item.transporterName ?? "N/A"}",
+                              style: CustomTextStyle.bodyText.copyWith(
+                                fontSize: getSize(14),
+                                color: AppColors.primaryText4,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             Row(
                               spacing: getSize(10),
                               children: [
                                 Expanded(
                                   child: CustomText(
-                                    text:
-                                        "Amt - ${item.totalAmount ?? "N/A"}",
+                                    text: "Amt - ${item.totalAmount ?? "N/A"}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       fontSize: getSize(14),
                                       color: AppColors.primaryText4,
@@ -88,8 +106,7 @@ class DispatchStatusScreen extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: CustomText(
-                                    text:
-                                        "Status - ${item.status ?? "N/A"}",
+                                    text: "Status - ${item.status ?? "N/A"}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       fontSize: getSize(14),
                                       color: AppColors.primaryText4,

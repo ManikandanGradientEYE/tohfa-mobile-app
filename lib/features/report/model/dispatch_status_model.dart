@@ -453,116 +453,119 @@
 
 import 'dart:convert';
 
-DispatchStatusResModel dispatchStatusResModelFromJson(String str) => DispatchStatusResModel.fromJson(json.decode(str));
+DispatchStatusResModel dispatchStatusResModelFromJson(String str) =>
+    DispatchStatusResModel.fromJson(json.decode(str));
 
-String dispatchStatusResModelToJson(DispatchStatusResModel data) => json.encode(data.toJson());
+String dispatchStatusResModelToJson(DispatchStatusResModel data) =>
+    json.encode(data.toJson());
 
 class DispatchStatusResModel {
-    List<Datum>? data;
-    bool? succeeded;
-    List<dynamic>? messages;
+  List<Datum>? data;
+  bool? succeeded;
+  List<dynamic>? messages;
 
-    DispatchStatusResModel({
-        this.data,
-        this.succeeded,
-        this.messages,
-    });
+  DispatchStatusResModel({
+    this.data,
+    this.succeeded,
+    this.messages,
+  });
 
-    factory DispatchStatusResModel.fromJson(Map<String, dynamic> json) => DispatchStatusResModel(
+  factory DispatchStatusResModel.fromJson(Map<String, dynamic> json) =>
+      DispatchStatusResModel(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         succeeded: json["succeeded"],
         messages: List<dynamic>.from(json["messages"].map((x) => x)),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data!.map((x) => x.toJson())),
         "succeeded": succeeded,
         "messages": List<dynamic>.from(messages!.map((x) => x)),
-    };
+      };
 }
 
 class Datum {
-    int? siteId;
-    String? siteName;
-    String? lrDocNo;
-    String? lrDocDate;
-    String? site;
-    String? consignee;
-    String? transporterName;
-    String? stockPoint;
-    String? refDocNo;
-    String? vehicleNo;
-    String? refDocDate;
-    String? mode;
-    String? transactionType;
-    int? gateExitId;
-    String? gateExitNo;
-    String? stationFrom;
-    String? stationTo;
-    String? distance;
-    String? deliveryDate;
-    String? toPay;
-    int? rate;
-    int? actualWeight;
-    int? chargedWeight;
-    int? freightCharges;
-    int? otherCharges;
-    int? totalAmount;
-    int? declarationAmount;
-    int? documentAmount;
-    dynamic completionTime;
-    String? remarks;
-    String? documentUrl;
-    String? status;
-    int? id;
-    String? createdBy;
-    DateTime? createdOn;
-    dynamic modifiedBy;
-    dynamic modifiedOn;
-    bool? isActive;
+  int? siteId;
+  String? siteName;
+  String? lrDocNo;
+  String? lrDocDate;
+  String? site;
+  String? consignee;
+  String? transporterName;
+  String? stockPoint;
+  String? refDocNo;
+  String? vehicleNo;
+  String? refDocDate;
+  String? mode;
+  String? transactionType;
+  int? gateExitId;
+  String? gateExitNo;
+  String? stationFrom;
+  String? stationTo;
+  String? distance;
+  String? deliveryDate;
+  String? toPay;
+  int? rate;
+  int? actualWeight;
+  int? chargedWeight;
+  int? freightCharges;
+  int? otherCharges;
+  int? totalAmount;
+  int? declarationAmount;
+  int? documentAmount;
+  dynamic completionTime;
+  String? remarks;
+  String? documentUrl;
+  String? status;
+  int? id;
+  String? createdBy;
+  DateTime? createdOn;
+  dynamic modifiedBy;
+  dynamic modifiedOn;
+  bool? isActive;
 
-    Datum({
-        this.siteId,
-        this.siteName,
-        this.lrDocNo,
-        this.lrDocDate,
-        this.site,
-        this.consignee,
-        this.transporterName,
-        this.stockPoint,
-        this.refDocNo,
-        this.vehicleNo,
-        this.refDocDate,
-        this.mode,
-        this.transactionType,
-        this.gateExitId,
-        this.gateExitNo,
-        this.stationFrom,
-        this.stationTo,
-        this.distance,
-        this.deliveryDate,
-        this.toPay,
-        this.rate,
-        this.actualWeight,
-        this.chargedWeight,
-        this.freightCharges,
-        this.otherCharges,
-        this.totalAmount,
-        this.declarationAmount,
-        this.documentAmount,
-        this.completionTime,
-        this.remarks,
-        this.documentUrl,
-        this.status,
-        this.id,
-        this.createdBy,
-        this.createdOn,
-        this.modifiedBy,
-        this.modifiedOn,
-        this.isActive,
-    });
+  Datum({
+    this.siteId,
+    this.siteName,
+    this.lrDocNo,
+    this.lrDocDate,
+    this.site,
+    this.consignee,
+    this.transporterName,
+    this.stockPoint,
+    this.refDocNo,
+    this.vehicleNo,
+    this.refDocDate,
+    this.mode,
+    this.transactionType,
+    this.gateExitId,
+    this.gateExitNo,
+    this.stationFrom,
+    this.stationTo,
+    this.distance,
+    this.deliveryDate,
+    this.toPay,
+    this.rate,
+    this.actualWeight,
+    this.chargedWeight,
+    this.freightCharges,
+    this.otherCharges,
+    this.totalAmount,
+    this.declarationAmount,
+    this.documentAmount,
+    this.completionTime,
+    this.remarks,
+    this.documentUrl,
+    this.status,
+    this.id,
+    this.createdBy,
+    this.createdOn,
+    this.modifiedBy,
+    this.modifiedOn,
+    this.isActive,
+  });
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         siteId: json["siteId"],
         siteName: json["site_name"],
         lrDocNo: json["lrDocNo"],
@@ -601,9 +604,9 @@ class Datum {
         modifiedBy: json["modifiedBy"],
         modifiedOn: json["modifiedOn"],
         isActive: json["isActive"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "siteId": siteId,
         "site_name": siteName,
         "lrDocNo": lrDocNo,
@@ -642,5 +645,5 @@ class Datum {
         "modifiedBy": modifiedBy,
         "modifiedOn": modifiedOn,
         "isActive": isActive,
-    };
+      };
 }
