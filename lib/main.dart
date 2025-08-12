@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'export.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isAndroid) {
+  }
   await Singleton.instance.appInit();
 
   ///await Firebase.initializeApp();

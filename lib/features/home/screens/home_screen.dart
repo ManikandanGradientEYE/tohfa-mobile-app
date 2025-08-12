@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? _catalogBuilder(catalog)
                   : _selectedTabIndex == 1
                       ? SizedBox(
-                          height: getSize(1600),
+                          height: getSize(500),
                           child: ZohoBookingEmbed(),
                         )
                       : _selectedTabIndex == 2

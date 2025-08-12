@@ -2,6 +2,7 @@ export 'package:flutter/material.dart';
 export 'package:demo/core/widgets/custom_text_style.dart';
 export 'package:demo/injection/injection.dart';
 export 'package:flutter/services.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 export 'package:demo/core/constants/app_colors.dart';
 export 'package:demo/core/utils/size_utils.dart';
 export 'package:connectivity_plus/connectivity_plus.dart';

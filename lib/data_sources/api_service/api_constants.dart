@@ -60,4 +60,10 @@ class ApiConstants {
   static const String getInvoices = "$baseUrl/CustomerRequest/Invoices";
   static const String getPastFoodOrder =
       "$baseUrl/CustomerRequest/PastFoodOrders";
+
+
+  // CustomerRequest Meeting
+
+    static const String meetings = "$baseUrl/CustomerRequest/Meetings";
+    static const String customerRequest = "$baseUrl/CustomerRequest/EmbedUrl";
 }

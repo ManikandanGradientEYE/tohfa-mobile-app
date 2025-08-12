@@ -10,3 +10,8 @@ class HomeErrorState extends HomeState {
 
   HomeErrorState({this.error});
 }
+class CustomerRequestSuccessState extends HomeState {
+  final String link;
+
+  CustomerRequestSuccessState(this.link);
+}
