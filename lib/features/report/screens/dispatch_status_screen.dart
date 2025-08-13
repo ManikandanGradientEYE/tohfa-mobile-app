@@ -57,129 +57,104 @@ class DispatchStatusScreen extends StatelessWidget {
                           spacing: getSize(5),
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                              text: "LR Doc No: ${item.lrDocNo ?? "N/A"}",
-                              style: CustomTextStyle.bodyText.copyWith(
-                                color: AppColors.primaryText3,
-                                fontSize: getSize(14),
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomText(
+                                  text: "LR No: ${item.lrDocNo ?? "N/A"}",
+                                  style: CustomTextStyle.bodyText.copyWith(
+                                    color: AppColors.primaryText3,
+                                    fontSize: getSize(14),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.35,
+                                  child: CustomText(
+                                    text:
+                                        "Dated: ${dateFormate(item.lrDocDate ?? "N/A")}",
+                                    style: CustomTextStyle.bodyText.copyWith(
+                                      color: AppColors.primaryText3,
+                                      fontSize: getSize(14),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                            getSizeBox(height: 1),
                             CustomText(
                               text:
-                                  "LR Dated: ${dateFormate(item.lrDocDate ?? "N/A")}",
+                                  "Transporter: ${item.transporterName ?? "N/A"}",
                               style: CustomTextStyle.bodyText.copyWith(
-                                color: AppColors.primaryText3,
                                 fontSize: getSize(14),
-                                fontWeight: FontWeight.w600,
+                                color: AppColors.primaryText4,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
+                            getSizeBox(height: 1),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  spacing: getSize(5),
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.45,
-                                      child: CustomText(
-                                        text:
-                                            "Type: ${item.transactionType ?? "N/A"}",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          fontSize: getSize(14),
-                                          color: AppColors.primaryText4,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.45,
-                                      child: CustomText(
-                                        text:
-                                            "Value: ${item.declarationAmount ?? "N/A"}",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          fontSize: getSize(14),
-                                          color: AppColors.primaryText4,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.45,
-                                      child: CustomText(
-                                        text:
-                                            "Remarks - ${item.remarks ?? "N/A"}",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          fontSize: getSize(14),
-                                          color: AppColors.primaryText4,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                CustomText(
+                                  text:
+                                      "Type: ${item.transactionType ?? "N/A"}",
+                                  style: CustomTextStyle.bodyText.copyWith(
+                                    fontSize: getSize(14),
+                                    color: AppColors.primaryText4,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  spacing: 8,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.5,
-                                      child: CustomText(
-                                        text:
-                                            "Transporter: ${item.transporterName ?? "N/A"}",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          fontSize: getSize(14),
-                                          color: AppColors.primaryText4,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.35,
+                                  child: CustomText(
+                                    text:
+                                        "Value: ${item.declarationAmount ?? "N/A"}",
+                                    style: CustomTextStyle.bodyText.copyWith(
+                                      fontSize: getSize(14),
+                                      color: AppColors.primaryText4,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    InkWell(
-                                      onTap: () async {
-                                        List<String> images =
-                                            item.documentUrl!.split(',');
-                                        bool permissionGranted =
-                                            await requestStoragePermission();
-
-                                        if (!permissionGranted) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Storage/Photo permission not granted");
-                                          return;
-                                        }
-
-                                        await downloadImagesToDevice(
-                                            context, images);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                width: 1, color: Colors.green),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 5),
-                                          child: Center(
-                                            child: Text("Download LR"),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
                               ],
+                            ),
+                            getSizeBox(height: 1),
+                            CustomText(
+                              text: "Remarks - ${item.remarks ?? "N/A"}",
+                              style: CustomTextStyle.bodyText.copyWith(
+                                fontSize: getSize(14),
+                                color: AppColors.primaryText4,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            getSizeBox(height: 1),
+                            Wrap(
+                              children: List.generate(
+                                item.documentUrl!.split(',').length,
+                                (index) => InkWell(
+                                  onTap: () async {
+                                    await downloadImagesToDevice(context,
+                                        item.documentUrl!.split(',')[index]);
+                                  },
+                                  child: CustomText(
+                                    text: item.documentUrl!.split(',').length ==
+                                            index + 1
+                                        ? "Download LR${index + 1}"
+                                        : index == 0
+                                            ? "Download LR   |   "
+                                            : "Download LR${index + 1}   |   ",
+                                    style: TextStyle(
+                                      fontSize: getSize(15),
+                                      color: AppColors.primaryText4,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -193,47 +168,43 @@ class DispatchStatusScreen extends StatelessWidget {
     );
   }
 
-Future<bool> requestStoragePermission() async {
-  if (Platform.isAndroid) {
-    if (await Permission.storage.isGranted) {
-      return true;
+  Future<bool> requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      if (await Permission.storage.isGranted) {
+        return true;
+      }
+
+      // Request if not granted
+      final status = await Permission.photos.request();
+      return status.isGranted;
+    } else if (Platform.isIOS) {
+      if (await Permission.photosAddOnly.isGranted) {
+        return true;
+      }
+
+      final status = await Permission.photosAddOnly.request();
+      return status.isGranted;
     }
 
-    // Request if not granted
-    final status = await Permission.storage.request();
-    return status.isGranted;
-  } else if (Platform.isIOS) {
-    if (await Permission.photosAddOnly.isGranted) {
-      return true;
-    }
-
-    final status = await Permission.photosAddOnly.request();
-    return status.isGranted;
+    return true;
   }
 
-  return true;
-}
-
-
   Future<void> downloadImagesToDevice(
-      BuildContext context, List<String> imageUrls) async {
+      BuildContext context, String imageUrls) async {
     try {
       final Dio dio = Dio();
       bool allSuccess = true;
 
-      for (int i = 0; i < imageUrls.length; i++) {
-        final url = imageUrls[i].trim();
-        final response = await dio.get(url,
-            options: Options(responseType: ResponseType.bytes));
+      final response = await dio.get(imageUrls,
+          options: Options(responseType: ResponseType.bytes));
 
-        final result = await ImageGallerySaverPlus.saveImage(response.data);
+      final result = await ImageGallerySaverPlus.saveImage(response.data);
 
-        if (result['isSuccess'] != true) {
-          allSuccess = false;
-          log('Failed to save image: $url');
-        } else {
-          log('Saved image: $url, path: ${result['filePath']}');
-        }
+      if (result['isSuccess'] != true) {
+        allSuccess = false;
+        log('Failed to save image: $imageUrls');
+      } else {
+        log('Saved image: $imageUrls, path: ${result['filePath']}');
       }
 
       if (allSuccess) {

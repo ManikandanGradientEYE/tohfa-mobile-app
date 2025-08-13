@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentSliderIndex = 0;
   int _selectedTabIndex = 0;
 
+  ScrollController? scrollController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,11 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
     final food = (bloc.activeFoodsModel?.data ?? []).toList();
     final event = bloc.activeEventsModel?.data;
-
     return Stack(
       children: [
         SingleChildScrollView(
           padding: getPadding(left: 16, right: 16, top: 0, bottom: 5),
+          controller: _selectedTabIndex == 1 ? scrollController : null,
           child: Column(
             spacing: getSize(10),
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Padding(
-      padding: getPadding(top: 16),
+      padding: getPadding(top: 5),
       child: Column(
         spacing: 5,
         children: [
@@ -381,6 +382,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   setState(() {
                     _selectedTabIndex = index;
                   });
+                  if (index == 1) {
+                    scrollController = ScrollController();
+                    // WidgetsBinding.instance.addPostFrameCallback((_) {
+                    //   scrollController!.jumpTo(150);
+                    // });
+                  }
                   if (_selectedTabIndex == 3 &&
                       cubit.visitStatusModel.isEmpty) {
                     // await cubit.activeFoodMenu();

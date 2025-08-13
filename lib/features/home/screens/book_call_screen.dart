@@ -5,6 +5,7 @@ import 'package:demo/core/widgets/custom_text_style.dart';
 import 'package:demo/export.dart';
 import 'package:demo/features/home/bloc/home_cubit.dart';
 import 'package:demo/features/home/bloc/home_state.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -51,9 +52,10 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
           onPageStarted: (String url) {
             setState(() => _isLoading = true);
           },
-          onPageFinished: (String url) {
+          onPageFinished: (String url) async {
             setState(() => _isLoading = false);
-
+            // await _controller.runJavaScript(
+            //     '''  document.body.innerHTML = `<iframe src="https://calendly.com/d/csxh-3tn-xqs?name=Chirag%20Jain&email=john@example.com&a1=8087382829&a2=GE%20Technologies" width="100%" height="100%" frameborder="0"></iframe>`;''');
             if (url.contains("confirmation") || url.contains("success")) {
               setState(() {
                 _showWebView = false;
@@ -110,99 +112,123 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
-                    // final siteId = Singleton.instance.userData?.id ?? '';
-                    // context.read<HomeCubit>().getcustomerRequest(siteId);
+                BlocListener<HomeCubit, HomeState>(
+                  listener: (context, state) {
+                    if (state is CustomerRequestSuccessState) {
+                      setState(() {
+                        _webViewUrl = state.link;
+                        _showWebView = true;
+                      });
+
+                      _controller.loadRequest(Uri.parse(state.link));
+                    } else if (state is HomeErrorState) {}
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: _selectedIndex == 1
-                            ? const Color(0xffE6DED4)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 5),
-                      child: Center(
-                          child: CustomText(
-                        text: "Schedule Video Call",
-                        style: CustomTextStyle.bodyText.copyWith(
-                          fontSize: getSize(15),
-                          color: AppColors.grey.withOpacity(0.5),
-                          fontWeight: FontWeight.w400,
-                        ),
-                      )),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 1;
+                      });
+                      final siteId = Singleton.instance.userData?.id ?? '';
+                      context.read<HomeCubit>().getcustomerRequest(siteId);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: _selectedIndex == 1
+                              ? const Color(0xffE6DED4)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 5),
+                        child: Center(
+                            child: CustomText(
+                          text: "Schedule Video Call",
+                          style: CustomTextStyle.bodyText.copyWith(
+                            fontSize: getSize(15),
+                            color: AppColors.grey.withOpacity(0.5),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )),
+                      ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
             SizedBox(
               height: 10,
             ),
             if (_selectedIndex == 1)
-              _showWebView && _webViewUrl != null
-                  ? Expanded(child: WebViewWidget(controller: _controller))
-                  : SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomText(
-                              text: "Schedule Video Call Meeting",
-                              style: CustomTextStyle.bodyText.copyWith(
-                                fontSize: getSize(14.5),
-                                color: AppColors.grey.withOpacity(0.7),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            BlocListener<HomeCubit, HomeState>(
-                              listener: (context, state) {
-                                if (state is CustomerRequestSuccessState) {
-                                  setState(() {
-                                    _webViewUrl = state.link;
-                                    _showWebView = true;
-                                  });
-                                  _controller
-                                      .loadRequest(Uri.parse(state.link));
-                                } else if (state is HomeErrorState) {}
-                              },
-                              child: InkWell(
-                                onTap: () {
-                                  final siteId =
-                                      Singleton.instance.userData?.id ?? '';
-                                  context
-                                      .read<HomeCubit>()
-                                      .getcustomerRequest(siteId);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color:  const Color(0xff97948E),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 5),
-                                  child: CustomText(
-                                    text: "Schedule Video Call",
-                                      style: CustomTextStyle.bodyText.copyWith(
-                                      fontSize: getSize(14),
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+              _webViewUrl != null
+                  ? Expanded(
+                      child: WebViewWidget(
+                        controller: _controller,
+                        gestureRecognizers: <Factory<
+                            OneSequenceGestureRecognizer>>{
+                          Factory<OneSequenceGestureRecognizer>(
+                            () => EagerGestureRecognizer(),
+                          ),
+                        },
                       ),
-                    ),
+                    )
+                  : SizedBox(),
+            // SizedBox(
+            //     height: MediaQuery.of(context).size.height * 0.2,
+            //     child: Center(
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           CustomText(
+            //             text: "Schedule Video Call Meeting",
+            //             style: CustomTextStyle.bodyText.copyWith(
+            //               fontSize: getSize(14.5),
+            //               color: AppColors.grey.withOpacity(0.7),
+            //               fontWeight: FontWeight.w500,
+            //             ),
+            //           ),
+            //           const SizedBox(height: 20),
+            //           BlocListener<HomeCubit, HomeState>(
+            //             listener: (context, state) {
+            //               if (state is CustomerRequestSuccessState) {
+            //                 setState(() {
+            //                   _webViewUrl = state.link;
+            //                   _showWebView = true;
+            //                 });
+            //                 _controller
+            //                     .loadRequest(Uri.parse(state.link));
+            //               } else if (state is HomeErrorState) {}
+            //             },
+            //             child: InkWell(
+            //               onTap: () {
+            //                 final siteId =
+            //                     Singleton.instance.userData?.id ?? '';
+            //                 context
+            //                     .read<HomeCubit>()
+            //                     .getcustomerRequest(siteId);
+            //               },
+            //               child: Container(
+            //                 decoration: BoxDecoration(
+            //                   color: const Color(0xff97948E),
+            //                   borderRadius: BorderRadius.circular(5),
+            //                 ),
+            //                 padding: const EdgeInsets.symmetric(
+            //                     horizontal: 15, vertical: 5),
+            //                 child: CustomText(
+            //                   text: "Schedule Video Call",
+            //                   style: CustomTextStyle.bodyText.copyWith(
+            //                     fontSize: getSize(14),
+            //                     color: AppColors.white,
+            //                     fontWeight: FontWeight.w500,
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+
             if (_selectedIndex == 0)
               Expanded(
                 child: BlocBuilder<HomeCubit, HomeState>(
