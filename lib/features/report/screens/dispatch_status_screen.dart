@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 // import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../export.dart';
 import '../bloc/report_cubit.dart';
@@ -61,7 +59,7 @@ class DispatchStatusScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomText(
-                                  text: "LR No: ${item.lrDocNo ?? "N/A"}",
+                                  text: "LR No: ${item.refDocNo ?? "N/A"}",
                                   style: CustomTextStyle.bodyText.copyWith(
                                     color: AppColors.primaryText3,
                                     fontSize: getSize(14),
@@ -69,11 +67,9 @@ class DispatchStatusScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.35,
+                                  width: MediaQuery.of(context).size.width * 0.35,
                                   child: CustomText(
-                                    text:
-                                        "Dated: ${dateFormate(item.lrDocDate ?? "N/A")}",
+                                    text: "Dated: ${dateFormate(item.refDocDate ?? "N/A")}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       color: AppColors.primaryText3,
                                       fontSize: getSize(14),
@@ -85,8 +81,7 @@ class DispatchStatusScreen extends StatelessWidget {
                             ),
                             getSizeBox(height: 1),
                             CustomText(
-                              text:
-                                  "Transporter: ${item.transporterName ?? "N/A"}",
+                              text: "Transporter: ${item.transporterName ?? "N/A"}",
                               style: CustomTextStyle.bodyText.copyWith(
                                 fontSize: getSize(14),
                                 color: AppColors.primaryText4,
@@ -99,8 +94,7 @@ class DispatchStatusScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomText(
-                                  text:
-                                      "Type: ${item.transactionType ?? "N/A"}",
+                                  text: "Type: ${item.transactionType ?? "N/A"}",
                                   style: CustomTextStyle.bodyText.copyWith(
                                     fontSize: getSize(14),
                                     color: AppColors.primaryText4,
@@ -108,11 +102,9 @@ class DispatchStatusScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.35,
+                                  width: MediaQuery.of(context).size.width * 0.35,
                                   child: CustomText(
-                                    text:
-                                        "Value: ${item.declarationAmount ?? "N/A"}",
+                                    text: "Value: ${item.declarationAmount ?? "N/A"}",
                                     style: CustomTextStyle.bodyText.copyWith(
                                       fontSize: getSize(14),
                                       color: AppColors.primaryText4,
@@ -137,12 +129,11 @@ class DispatchStatusScreen extends StatelessWidget {
                                 item.documentUrl!.split(',').length,
                                 (index) => InkWell(
                                   onTap: () async {
-                                    await downloadImagesToDevice(context,
-                                        item.documentUrl!.split(',')[index]);
+                                    await downloadImagesToDevice(
+                                        context, item.documentUrl!.split(',')[index]);
                                   },
                                   child: CustomText(
-                                    text: item.documentUrl!.split(',').length ==
-                                            index + 1
+                                    text: item.documentUrl!.split(',').length == index + 1
                                         ? "Download LR${index + 1}"
                                         : index == 0
                                             ? "Download LR   |   "
@@ -189,14 +180,12 @@ class DispatchStatusScreen extends StatelessWidget {
     return true;
   }
 
-  Future<void> downloadImagesToDevice(
-      BuildContext context, String imageUrls) async {
+  Future<void> downloadImagesToDevice(BuildContext context, String imageUrls) async {
     try {
       final Dio dio = Dio();
       bool allSuccess = true;
 
-      final response = await dio.get(imageUrls,
-          options: Options(responseType: ResponseType.bytes));
+      final response = await dio.get(imageUrls, options: Options(responseType: ResponseType.bytes));
 
       final result = await ImageGallerySaverPlus.saveImage(response.data);
 

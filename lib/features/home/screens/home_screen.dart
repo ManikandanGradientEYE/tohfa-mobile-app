@@ -86,18 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 textAlign: TextAlign.center,
                 text: "Your  order has been placed\n successfully!",
                 style: CustomTextStyle.normalText.copyWith(
-                    color: Color(0xFF3F3F3F),
-                    fontWeight: FontWeight.w500,
-                    fontSize: getSize(15)),
+                    color: Color(0xFF3F3F3F), fontWeight: FontWeight.w500, fontSize: getSize(15)),
               ),
               getSizeBox(height: 10),
               CustomText(
                 textAlign: TextAlign.center,
                 text: "with Token No: “$token”",
                 style: CustomTextStyle.normalText.copyWith(
-                    color: Color(0xFF646464),
-                    fontWeight: FontWeight.w500,
-                    fontSize: getSize(14)),
+                    color: Color(0xFF646464), fontWeight: FontWeight.w500, fontSize: getSize(14)),
               ),
               getSizeBox(height: 40),
             ],
@@ -194,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? _catalogBuilder(catalog)
                   : _selectedTabIndex == 1
                       ? SizedBox(
-                          height: getSize(500),
+                          height: getSize(400),
                           child: ZohoBookingEmbed(),
                         )
                       : _selectedTabIndex == 2
@@ -247,8 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
           ),
-          items:
-              sliderImages.map((banner) => _buildSliderItem(banner)).toList(),
+          items: sliderImages.map((banner) => _buildSliderItem(banner)).toList(),
         ),
         Positioned(
           bottom: 10,
@@ -345,9 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: index == _currentSliderIndex
-              ? AppColors.primaryColor
-              : const Color(0xFFBCB9B9),
+          color: index == _currentSliderIndex ? AppColors.primaryColor : const Color(0xFFBCB9B9),
         ),
       );
     });
@@ -388,12 +381,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     //   scrollController!.jumpTo(150);
                     // });
                   }
-                  if (_selectedTabIndex == 3 &&
-                      cubit.visitStatusModel.isEmpty) {
+                  if (_selectedTabIndex == 3 && cubit.visitStatusModel.isEmpty) {
                     // await cubit.activeFoodMenu();
                     await cubit.getVisitStatus();
-                  } else if (_selectedTabIndex == 4 &&
-                      cubit.activeEventsModel == null) {
+                  } else if (_selectedTabIndex == 4 && cubit.activeEventsModel == null) {
                     await cubit.getEventBanners();
                   }
                 },
@@ -459,9 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
             textAlign: TextAlign.center,
             text: AppStrings.noRecordFound,
             style: CustomTextStyle.normalText.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.w500,
-                fontSize: getSize(15)),
+                color: AppColors.primaryColor, fontWeight: FontWeight.w500, fontSize: getSize(15)),
           ))
         : ListView.separated(
             primary: false,
@@ -477,8 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   height: getSize(135),
                   decoration: BoxDecoration(
-                      color: AppColors.whiteText,
-                      borderRadius: BorderRadius.circular(getSize(16))),
+                      color: AppColors.whiteText, borderRadius: BorderRadius.circular(getSize(16))),
                   child: CustomImageView(
                     height: getSize(135),
                     fit: BoxFit.cover,
@@ -499,9 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
             textAlign: TextAlign.center,
             text: AppStrings.noRecordFound,
             style: CustomTextStyle.normalText.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.w500,
-                fontSize: getSize(15)),
+                color: AppColors.primaryColor, fontWeight: FontWeight.w500, fontSize: getSize(15)),
           ))
         : ListView.separated(
             primary: false,
@@ -583,9 +569,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // Filter food items by selected category
         List<FoodItem> filteredFoodList = (bloc.selectedCategory ?? '').isEmpty
             ? newFoodList
-            : newFoodList
-                .where((item) => item.menucategoryname == bloc.selectedCategory)
-                .toList();
+            : newFoodList.where((item) => item.menucategoryname == bloc.selectedCategory).toList();
 
         return Column(
           spacing: getSize(10),
@@ -631,25 +615,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.separated(
                                   primary: false,
                                   scrollDirection: Axis.horizontal,
-                                  separatorBuilder: (context, index) =>
-                                      getSizeBox(height: 10),
+                                  separatorBuilder: (context, index) => getSizeBox(height: 10),
                                   itemBuilder: (context, index) => ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(getSize(16)),
+                                    borderRadius: BorderRadius.circular(getSize(16)),
                                     child: Container(
                                       height: getSize(190),
                                       width: MediaQuery.of(context).size.width,
                                       decoration: BoxDecoration(
                                           color: AppColors.whiteText,
-                                          borderRadius: BorderRadius.circular(
-                                              getSize(16))),
+                                          borderRadius: BorderRadius.circular(getSize(16))),
                                       child: Stack(
                                         children: [
                                           CustomImageView(
                                             height: getSize(190),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            width: MediaQuery.of(context).size.width,
                                             fit: BoxFit.cover,
                                             url: catalog[index].bannerUrl ?? "",
                                           ),
@@ -659,65 +638,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                               left: 10,
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 spacing: getSize(10),
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   CustomText(
-                                                    text:
-                                                        "Your lunch is on us!",
-                                                    style: CustomTextStyle
-                                                        .headingText
-                                                        .copyWith(
-                                                            color: AppColors
-                                                                .whiteText,
-                                                            fontSize:
-                                                                getSize(18),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
+                                                    text: "Your lunch is on us!",
+                                                    style: CustomTextStyle.headingText.copyWith(
+                                                        color: AppColors.whiteText,
+                                                        fontSize: getSize(18),
+                                                        fontWeight: FontWeight.w400),
                                                   ),
                                                   InkWell(
                                                     onTap: () {
-                                                      if (bloc.selectedVisitStatusModel ==
-                                                          null) return;
+                                                      if (bloc.selectedVisitStatusModel == null)
+                                                        return;
                                                       NavigatorService.push(
                                                           context,
                                                           MealOrderScreen.builder(
                                                               context,
-                                                              bloc.selectedVisitStatusModel!
-                                                                  .siteId
+                                                              bloc.selectedVisitStatusModel!.siteId
                                                                   .toString()));
                                                     },
                                                     child: Container(
                                                       padding: getMargin(
-                                                          left: 20,
-                                                          right: 20,
-                                                          top: 5,
-                                                          bottom: 5),
+                                                          left: 20, right: 20, top: 5, bottom: 5),
                                                       decoration: BoxDecoration(
                                                           color: AppColors.black
-                                                              .withValues(
-                                                                  alpha: .26),
+                                                              .withValues(alpha: .26),
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      getSize(
-                                                                          7))),
+                                                              BorderRadius.circular(getSize(7))),
                                                       child: CustomText(
                                                         text: "Book a Seat",
-                                                        style: CustomTextStyle
-                                                            .headingText
-                                                            .copyWith(
-                                                                color: AppColors
-                                                                    .whiteText,
-                                                                fontSize:
-                                                                    getSize(11),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
+                                                        style: CustomTextStyle.headingText.copyWith(
+                                                            color: AppColors.whiteText,
+                                                            fontSize: getSize(11),
+                                                            fontWeight: FontWeight.w400),
                                                       ),
                                                     ),
                                                   )
@@ -739,12 +695,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: categories.length,
-                                  separatorBuilder: (context, index) =>
-                                      getSizeBox(width: 10),
+                                  separatorBuilder: (context, index) => getSizeBox(width: 10),
                                   itemBuilder: (context, index) {
                                     final category = categories[index];
-                                    final isSelected =
-                                        category == bloc.selectedCategory;
+                                    final isSelected = category == bloc.selectedCategory;
 
                                     // Find first item with image in this category
                                     final categoryItem = newFoodList.firstWhere(
@@ -754,8 +708,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           item.imageUrl != "undefined",
                                       orElse: () => FoodItem(),
                                     );
-                                    logV(
-                                        "categoryItem===>${jsonEncode(category)}");
+                                    logV("categoryItem===>${jsonEncode(category)}");
 
                                     return GestureDetector(
                                       onTap: () {
@@ -766,13 +719,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Stack(
                                         children: [
                                           ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                getSize(8)),
+                                            borderRadius: BorderRadius.circular(getSize(8)),
                                             child: Container(
                                               height: getSize(150),
-                                              color: isSelected
-                                                  ? AppColors.white
-                                                  : Colors.grey[300],
+                                              color:
+                                                  isSelected ? AppColors.white : Colors.grey[300],
                                               width: getSize(135),
                                               child: Column(
                                                 children: [
@@ -780,35 +731,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     height: getSize(80),
                                                     width: double.infinity,
                                                     child: CustomImageView(
-                                                      url: categoryItem
-                                                              .imageUrl ??
-                                                          "",
+                                                      url: categoryItem.imageUrl ?? "",
                                                       height: getSize(80),
                                                       fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                   Expanded(
                                                     child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         CustomText(
                                                           text: category,
-                                                          style: CustomTextStyle
-                                                              .headingText
+                                                          style: CustomTextStyle.headingText
                                                               .copyWith(
-                                                                  color: AppColors
-                                                                      .primaryColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  fontSize:
-                                                                      getSize(
-                                                                          16),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                  color: AppColors.primaryColor,
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  fontSize: getSize(16),
+                                                                  fontWeight: FontWeight.w500),
                                                         ),
                                                         getSizeBox(height: 10)
                                                       ],
@@ -826,8 +765,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: getSize(35),
                                               width: getSize(35),
                                               decoration: BoxDecoration(
-                                                  color: AppColors.primaryColor
-                                                      .withValues(alpha: .35),
+                                                  color:
+                                                      AppColors.primaryColor.withValues(alpha: .35),
                                                   shape: BoxShape.circle),
                                               child: Center(
                                                 child: Icon(
@@ -879,8 +818,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   padding: getPadding(left: 10, right: 10),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryColor,
-                                    borderRadius:
-                                        BorderRadius.circular(getSize(8)),
+                                    borderRadius: BorderRadius.circular(getSize(8)),
                                   ),
                                   child: CustomText(
                                     text: "Show Cart",
@@ -899,8 +837,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ListView.separated(
                           primary: false,
                           shrinkWrap: true,
-                          separatorBuilder: (context, index) =>
-                              getSizeBox(height: 10),
+                          separatorBuilder: (context, index) => getSizeBox(height: 10),
                           itemBuilder: (context, index) =>
                               _singleFoodItemBuilder(filteredFoodList[index]),
                           itemCount: filteredFoodList.length,
@@ -997,8 +934,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showSpecialInstructionsDialog(BuildContext context, FoodItem food) {
-    final TextEditingController instructionsController =
-        TextEditingController();
+    final TextEditingController instructionsController = TextEditingController();
     final cubit = context.read<HomeCubit>();
     final currentCartItem = cubit.getCartItem(food.id);
     instructionsController.text = currentCartItem.specialInstruction;
@@ -1097,8 +1033,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     TextButton(
                       style: TextButton.styleFrom(
-                        padding: getPadding(
-                            left: 16, right: 16, top: 10, bottom: 10),
+                        padding: getPadding(left: 16, right: 16, top: 10, bottom: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(getSize(8)),
                         ),
@@ -1115,8 +1050,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
-                        padding: getPadding(
-                            left: 20, right: 20, top: 10, bottom: 10),
+                        padding: getPadding(left: 20, right: 20, top: 10, bottom: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(getSize(8)),
                         ),
@@ -1124,8 +1058,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         if (instructionsController.text.isNotEmpty) {
                           // Add the special instructions to the cart
-                          cubit.addSpecialInstruction(
-                              instructionsController.text, currentCartItem);
+                          cubit.addSpecialInstruction(instructionsController.text, currentCartItem);
                         }
                         Navigator.pop(context);
                       },
@@ -1202,8 +1135,7 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 onTap: () {
                   if (cartItem.quantity > 1) {
-                    cubit.updateCartItemQuantity(
-                        cartItem, cartItem.quantity - 1);
+                    cubit.updateCartItemQuantity(cartItem, cartItem.quantity - 1);
                   } else {
                     cubit.removeFromCart(cartItem);
                   }
@@ -1246,8 +1178,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                child: Icon(Icons.more_vert,
-                    color: AppColors.primaryColor, size: getSize(20)),
+                child: Icon(Icons.more_vert, color: AppColors.primaryColor, size: getSize(20)),
                 onTap: () => _showSpecialInstructionsDialog(context, item),
               ),
             ],
@@ -1258,13 +1189,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _foodCartView(BuildContext context) {
     final bloc = context.read<HomeCubit>();
-    List<VisitStatusModel> newVisitStatusModel = bloc.visitStatusModel
-        .where((element) => element.isFoodFacilityAvailable ?? false)
-        .toList();
+    List<VisitStatusModel> newVisitStatusModel =
+        bloc.visitStatusModel.where((element) => element.isFoodFacilityAvailable ?? false).toList();
 
-    List<SectionModel> newSectionModel = bloc.sectionModel
-        .where((element) => !(element.disabled ?? false))
-        .toList();
+    List<SectionModel> newSectionModel =
+        bloc.sectionModel.where((element) => !(element.disabled ?? false)).toList();
     return Column(
       spacing: getSize(10),
       children: [
@@ -1294,8 +1223,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           decoration: BoxDecoration(
             color: AppColors.white,
-            border: Border.all(
-                color: AppColors.primaryColor.withValues(alpha: .84)),
+            border: Border.all(color: AppColors.primaryColor.withValues(alpha: .84)),
           ),
           child: ListView.separated(
             primary: false,
@@ -1413,9 +1341,8 @@ class _HomeScreenState extends State<HomeScreen> {
             hintText: "Select Section",
             enabled: newVisitStatusModel.isNotEmpty,
             valueText: bloc.selectedSectionModel?.text,
-            disableMessage: newSectionModel.isEmpty
-                ? "This site is not providing section service"
-                : null,
+            disableMessage:
+                newSectionModel.isEmpty ? "This site is not providing section service" : null,
             labelText: "Section",
           ),
 
@@ -1453,8 +1380,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 ///Place order
-                bloc.orderFood(
-                    bloc.selectedVisitStatusModel!.siteId.toString());
+                bloc.orderFood(bloc.selectedVisitStatusModel!.siteId.toString());
               },
               child: CustomText(
                 text: "Order",
@@ -1516,8 +1442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 5),
                             Text("Venue: ${event[index].venue ?? 'N/A'}"),
                             SizedBox(height: 5),
-                            Text(
-                                "Description: ${event[index].description ?? 'N/A'}"),
+                            Text("Description: ${event[index].description ?? 'N/A'}"),
                             SizedBox(height: 5),
                             if (event[index].remarks != null)
                               Text("Remarks: ${event[index].remarks}"),
@@ -1537,8 +1462,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 70,
                     decoration: BoxDecoration(
                       color: AppColors.whiteText,
-                      border: Border.all(
-                          color: Color(0xFFEED070), width: getSize(1)),
+                      border: Border.all(color: Color(0xFFEED070), width: getSize(1)),
                     ),
                     child: Row(
                       spacing: getSize(10),
@@ -1570,15 +1494,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         CustomText(
                                           text: event[index].title ?? "N/A",
-                                          style: CustomTextStyle.headingText
-                                              .copyWith(
+                                          style: CustomTextStyle.headingText.copyWith(
                                             color: AppColors.primaryColor,
                                             overflow: TextOverflow.ellipsis,
                                             fontSize: getSize(16),
@@ -1586,15 +1507,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         CustomText(
-                                          text: event[index].eventDateTime ==
-                                                  null
+                                          text: event[index].eventDateTime == null
                                               ? "N/A"
-                                              : DateFormat('EEE d MMM, hh:mm a')
-                                                  .format(DateTime.parse(
-                                                      event[index]
-                                                          .eventDateTime!)),
-                                          style: CustomTextStyle.headingText
-                                              .copyWith(
+                                              : DateFormat('EEE d MMM, hh:mm a').format(
+                                                  DateTime.parse(event[index].eventDateTime!)),
+                                          style: CustomTextStyle.headingText.copyWith(
                                             color: AppColors.textGrey4,
                                             overflow: TextOverflow.ellipsis,
                                             fontSize: getSize(12),
@@ -1612,14 +1529,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             Expanded(
                                               child: CustomText(
-                                                text:
-                                                    event[index].venue ?? "N/A",
-                                                style: CustomTextStyle
-                                                    .headingText
-                                                    .copyWith(
+                                                text: event[index].venue ?? "N/A",
+                                                style: CustomTextStyle.headingText.copyWith(
                                                   color: AppColors.textGrey4,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                   fontSize: getSize(10),
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -1635,10 +1548,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 50,
                                     padding: getPadding(all: 2),
                                     decoration: BoxDecoration(
-                                      color: AppColors.primaryColor
-                                          .withOpacity(0.5),
-                                      borderRadius:
-                                          BorderRadius.circular(getSize(8)),
+                                      color: AppColors.primaryColor.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(getSize(8)),
                                     ),
                                     child: Center(
                                       child: CustomText(
@@ -1646,10 +1557,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         text: event[index].eventDateTime == null
                                             ? "N/A"
                                             : DateFormat('d \n EEE').format(
-                                                DateTime.parse(event[index]
-                                                    .eventDateTime!)),
-                                        style: CustomTextStyle.headingText
-                                            .copyWith(
+                                                DateTime.parse(event[index].eventDateTime!)),
+                                        style: CustomTextStyle.headingText.copyWith(
                                           color: AppColors.whiteText,
                                           overflow: TextOverflow.ellipsis,
                                           fontSize: getSize(13),

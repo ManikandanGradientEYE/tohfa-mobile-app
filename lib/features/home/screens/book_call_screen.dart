@@ -1,12 +1,5 @@
-import 'package:demo/core/constants/app_colors.dart';
-import 'package:demo/core/utils/size_utils.dart';
-import 'package:demo/core/widgets/custom_text.dart';
-import 'package:demo/core/widgets/custom_text_style.dart';
 import 'package:demo/export.dart';
-import 'package:demo/features/home/bloc/home_cubit.dart';
-import 'package:demo/features/home/bloc/home_state.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -26,10 +19,14 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
   bool _showWebView = false;
   String? _webViewUrl;
   load() async {
-    await context
-        .read<HomeCubit>()
-        .getAllMeeting(Singleton.instance.userData?.id ?? '');
+    await context.read<HomeCubit>().getAllMeeting(Singleton.instance.userData?.id ?? '');
   }
+
+  String encodedName = Uri.encodeComponent(Singleton.instance.userData!.customerName);
+  String encodedEmail = Uri.encodeComponent(
+      Singleton.instance.userData!.customerBillEmail.toString() != ""
+          ? Singleton.instance.userData!.customerBillEmail
+          : "info@tohfajewellery.in");
 
   @override
   void dispose() {
@@ -38,6 +35,9 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
 
   @override
   void initState() {
+    log("${Singleton.instance.userData!.customerName}", name: "USER NAME");
+    log("${Singleton.instance.userData!.customerBillEmail.toString() != "" ? Singleton.instance.userData!.customerBillEmail : "info@tohfajewellery.in"}",
+        name: "USER EMAIL");
     super.initState();
     load();
     _controller = WebViewController()
@@ -54,8 +54,8 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
           },
           onPageFinished: (String url) async {
             setState(() => _isLoading = false);
-            // await _controller.runJavaScript(
-            //     '''  document.body.innerHTML = `<iframe src="https://calendly.com/d/csxh-3tn-xqs?name=Chirag%20Jain&email=john@example.com&a1=8087382829&a2=GE%20Technologies" width="100%" height="100%" frameborder="0"></iframe>`;''');
+            await _controller.runJavaScript(
+                '''  document.body.innerHTML = `<iframe src="https://calendly.com/d/csxh-3tn-xqs?name=$encodedName&email=$encodedEmail&a1=8087382829&a2=GE%20Technologies" width="100%" height="100%" frameborder="0"></iframe>`;''');
             if (url.contains("confirmation") || url.contains("success")) {
               setState(() {
                 _showWebView = false;
@@ -92,13 +92,10 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        color: _selectedIndex == 0
-                            ? const Color(0xffE6DED4)
-                            : Colors.transparent,
+                        color: _selectedIndex == 0 ? const Color(0xffE6DED4) : Colors.transparent,
                         borderRadius: BorderRadius.circular(5)),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                       child: Center(
                         child: CustomText(
                           text: "Upcoming Video Calls",
@@ -133,13 +130,10 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: _selectedIndex == 1
-                              ? const Color(0xffE6DED4)
-                              : Colors.transparent,
+                          color: _selectedIndex == 1 ? const Color(0xffE6DED4) : Colors.transparent,
                           borderRadius: BorderRadius.circular(5)),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                         child: Center(
                             child: CustomText(
                           text: "Schedule Video Call",
@@ -163,8 +157,7 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                   ? Expanded(
                       child: WebViewWidget(
                         controller: _controller,
-                        gestureRecognizers: <Factory<
-                            OneSequenceGestureRecognizer>>{
+                        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                           Factory<OneSequenceGestureRecognizer>(
                             () => EagerGestureRecognizer(),
                           ),
@@ -267,8 +260,7 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                                   color: const Color(0xff97948E),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
+                                padding: const EdgeInsets.symmetric(vertical: 6),
                                 child: Center(
                                   child: CustomText(
                                     text: "Schedule Video Call",
@@ -298,18 +290,15 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                             shadowColor: AppColors.black.withOpacity(0.5),
                             color: AppColors.bgColor,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 15),
+                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 15),
                               child: Column(
                                 children: [
                                   _buildRow(
-                                      "Date :",
-                                      formatDateWithSuffix(
-                                          meeting.startDate.toString())),
+                                      "Date :", formatDateWithSuffix(meeting.startDate.toString())),
                                   _buildRow(
                                       "Time :",
-                                      formatTimeRange(
-                                          meeting.startTime.toString())),
+                                      formatTimeRange(meeting.startTime.toString(),
+                                          meeting.endTime.toString())),
                                   _buildRow("Section :", meeting.section),
                                   const SizedBox(height: 12),
                                   GestureDetector(
@@ -317,26 +306,22 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                                       String url = meeting.meetingUrl;
                                       if (await canLaunchUrl(Uri.parse(url))) {
                                         await launchUrl(Uri.parse(url),
-                                            mode:
-                                                LaunchMode.externalApplication);
+                                            mode: LaunchMode.inAppBrowserView);
                                       } else {
                                         log('Could not launch $url');
                                       }
                                     },
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
+                                      width: MediaQuery.of(context).size.width * 0.6,
                                       decoration: BoxDecoration(
                                         color: const Color(0xff97948E),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
+                                      padding: const EdgeInsets.symmetric(vertical: 6),
                                       child: Center(
                                         child: CustomText(
                                           text: "Join Meeting",
-                                          style:
-                                              CustomTextStyle.bodyText.copyWith(
+                                          style: CustomTextStyle.bodyText.copyWith(
                                             fontSize: getSize(14),
                                             color: AppColors.white,
                                             fontWeight: FontWeight.w500,
@@ -404,11 +389,11 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
     }
   }
 
-  String formatTimeRange(String timeStr, {int durationInMinutes = 60}) {
-    final start = DateTime.parse(timeStr).toLocal();
-    final end = start.add(Duration(minutes: durationInMinutes));
+  String formatTimeRange(String startTimeStr, String endTimeStr) {
+    final start = DateTime.parse(startTimeStr).toLocal();
+    final end = DateTime.parse(endTimeStr).toLocal();
 
-    final timeFormat = DateFormat.jm(); // e.g., 8:30 PM
+    final timeFormat = DateFormat.jm();
     return "${timeFormat.format(start)} to ${timeFormat.format(end)}";
   }
 }
