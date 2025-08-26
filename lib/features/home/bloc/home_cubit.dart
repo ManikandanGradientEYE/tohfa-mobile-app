@@ -86,8 +86,7 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
   }
 
   // Calculate subtotal
-  double get cartSubtotal =>
-      cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+  double get cartSubtotal => cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
   // Calculate tax (example: 10%)
   double get cartTax => cartSubtotal * 0.1;
@@ -107,13 +106,11 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
       //   (p0) => p0,
       // );
       if (response.success) {
-        activeBannersModel =
-            activeBannersModelFromJson(jsonEncode(response.data));
+        activeBannersModel = activeBannersModelFromJson(jsonEncode(response.data));
         successState();
         // await getEventBanners();
       } else {
-        emit(HomeErrorState(
-            error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -129,13 +126,11 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
         (p0) => p0,
       );
       if (response.success) {
-        activeEventsModel =
-            activeEventsModelFromJson(jsonEncode(response.data));
+        activeEventsModel = activeEventsModelFromJson(jsonEncode(response.data));
         successState();
         // await activeFoodMenu();
       } else {
-        emit(HomeErrorState(
-            error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -154,8 +149,7 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
         activeFoodsModel = activeFoodsModelFromJson(jsonEncode(response.data));
         emit(HomeSuccessState());
       } else {
-        emit(HomeErrorState(
-            error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -217,65 +211,63 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
     }
   }
 
-
   // MeetingList
 
   Future<void> getAllMeeting(String siteId) async {
-  emit(HomeLoadingState());
+    emit(HomeLoadingState());
 
-  try {
-    final response = await apiClient.get(
-      "${ApiConstants.meetings}?customerSiteId=$siteId",
-      (data) => data,
-    );
+    try {
+      final response = await apiClient.get(
+        "${ApiConstants.meetings}?customerSiteId=$siteId",
+        (data) => data,
+      );
 
-    if (response.success) {
-      final List<MeetingsList> meetings = meetingsListFromJson(jsonEncode(response.data));
-      
-      meetingsList = meetings;
-         emit(HomeSuccessState());
-    } else {
-        emit(HomeErrorState(
-            error: response.errorMessage ?? AppStrings.somethingWentWrong));
-    }
-  } catch (e) {
-    emit(HomeErrorState(error: AppStrings.somethingWentWrong));
+      if (response.success) {
+        final List<MeetingsList> meetings = meetingsListFromJson(jsonEncode(response.data));
+
+        meetingsList = meetings;
+        emit(HomeSuccessState());
+      } else {
+        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
+      }
+    } catch (e) {
+      emit(HomeErrorState(error: AppStrings.somethingWentWrong));
       logV("Error===>$e");
+    }
   }
-}
 
 // customerRequest
 
-Future<void> getcustomerRequest(String siteId) async {
-  emit(HomeLoadingState());
-  try {
-    final response = await apiClient.get(
-      ApiConstants.customerRequest,
-      (data) => data,
-    );
+  Future<void> getcustomerRequest(String siteId) async {
+    emit(HomeLoadingState());
+    try {
+      final response = await apiClient.get(
+        ApiConstants.customerRequest,
+        (data) => data,
+      );
 
-    if (response.success) {
-      final link = response.data as String?;
-      if (link != null && link.isNotEmpty) {
-        customerRequestLink = link;
-        emit(CustomerRequestSuccessState(link)); 
-         emit(HomeSuccessState());
-        log("hcklbcjkv");
+      if (response.success) {
+        final link = response.data as String?;
+        if (link != null && link.isNotEmpty) {
+          customerRequestLink = link;
+          emit(CustomerRequestSuccessState(link));
+          emit(HomeSuccessState());
+          log(customerRequestLink.toString(), name: "WEB VIEW URL");
+        } else {
+          emit(HomeErrorState(
+            error: response.errorMessage ?? AppStrings.somethingWentWrong,
+          ));
+        }
       } else {
         emit(HomeErrorState(
           error: response.errorMessage ?? AppStrings.somethingWentWrong,
         ));
       }
-    } else {
-      emit(HomeErrorState(
-        error: response.errorMessage ?? AppStrings.somethingWentWrong,
-      ));
+    } catch (e) {
+      emit(HomeErrorState(error: AppStrings.somethingWentWrong));
+      logV("Error===>$e");
     }
-  } catch (e) {
-    emit(HomeErrorState(error: AppStrings.somethingWentWrong));
-    logV("Error===>$e");
   }
-}
 
   ///Add special instruction
   void addSpecialInstruction(String instruction, CartItem item) {

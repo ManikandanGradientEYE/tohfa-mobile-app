@@ -35,6 +35,10 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
 
   @override
   void initState() {
+    final siteId = Singleton.instance.userData?.id ?? '';
+    context.read<HomeCubit>().customerRequestLink == null
+        ? context.read<HomeCubit>().getcustomerRequest(siteId)
+        : null;
     log("${Singleton.instance.userData!.customerName}", name: "USER NAME");
     log("${Singleton.instance.userData!.customerBillEmail.toString() != "" ? Singleton.instance.userData!.customerBillEmail : "info@tohfajewellery.in"}",
         name: "USER EMAIL");
@@ -125,8 +129,8 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                       setState(() {
                         _selectedIndex = 1;
                       });
-                      final siteId = Singleton.instance.userData?.id ?? '';
-                      context.read<HomeCubit>().getcustomerRequest(siteId);
+                      // final siteId = Singleton.instance.userData?.id ?? '';
+                      // context.read<HomeCubit>().getcustomerRequest(siteId);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -164,7 +168,7 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                         },
                       ),
                     )
-                  : SizedBox(),
+                  : CustomLoading(),
             // SizedBox(
             //     height: MediaQuery.of(context).size.height * 0.2,
             //     child: Center(
