@@ -139,6 +139,11 @@ class CustomerSiteIdModel {
   dynamic transporterName;
   dynamic notificationCount;
   String? ogContactNo;
+  String? contactPerson;
+  String? customerIsdCode;
+  String? contactNo;
+  String? customerPhone1;
+  String? customerEmail;
   dynamic id;
   dynamic createdBy;
   dynamic createdOn;
@@ -165,6 +170,10 @@ class CustomerSiteIdModel {
     this.customerBillLandmark,
     this.notificationCount,
     this.ogContactNo,
+    this.customerEmail,
+    this.customerPhone1,
+    this.customerIsdCode,
+    this.contactNo,
     this.customerBillArea,
     this.customerBillDistrict,
     this.customerBillCity,
@@ -240,6 +249,7 @@ class CustomerSiteIdModel {
     this.customerShipGstStateName,
     this.customerShipStateName,
     this.priceList,
+    this.contactPerson,
     this.transactionTerm,
     this.transporterName,
   });
@@ -332,6 +342,10 @@ class CustomerSiteIdModel {
     dynamic transporterName,
     dynamic notificationCount,
     String? ogContactNo,
+    String? customerPhone1,
+    String? customerIsdCodectNo,
+    String? contactNo,
+    String? customerEmail,
     dynamic id,
     dynamic createdBy,
     dynamic createdOn,
@@ -354,6 +368,11 @@ class CustomerSiteIdModel {
           billContactPerson: billContactPerson ?? billContactPerson,
           notificationCount: notificationCount ?? notificationCount,
           ogContactNo: ogContactNo ?? this.ogContactNo,
+          customerEmail: customerEmail ?? this.customerEmail,
+          customerPhone1: customerPhone1 ?? customerPhone1,
+          contactPerson: contactPerson ?? contactPerson,
+          customerIsdCode: customerIsdCode ?? customerIsdCode,
+          contactNo: contactNo ?? contactNo,
           billContactNo: billContactNo ?? billContactNo,
           customerBillAddress1: customerBillAddress1 ?? customerBillAddress1,
           customerBillAddress2: customerBillAddress2 ?? customerBillAddress2,
@@ -442,8 +461,8 @@ class CustomerSiteIdModel {
         transporterId: json["transporterId"],
         billContactPerson: json["bill_contact_person"],
         billContactNo: json["bill_contact_no"],
-        customerBillAddress1: json["customer_bill_address1"],
-        customerBillAddress2: json["customer_bill_address2"],
+        customerBillAddress1: json["customer_bill_address1"] ?? "",
+        customerBillAddress2: json["customer_bill_address2"]??"",
         customerBillLandmark: json["customer_bill_landmark"],
         customerBillArea: json["customer_bill_area"],
         customerBillDistrict: json["customer_bill_district"],
@@ -470,9 +489,14 @@ class CustomerSiteIdModel {
         shipContactPerson: json["ship_contact_person"],
         shipContactNo: json["ship_contact_no"],
         notificationCount: (json["notification_count"] ?? 0).toString(),
-        ogContactNo: json["og_contact_no"],
-        customerShipAddress1: json["customer_ship_address1"],
-        customerShipAddress2: json["customer_ship_address2"],
+        ogContactNo: json["og_contact_no"]?? "",
+        customerEmail: json["customer_email"]?? "",
+        customerPhone1: json["customer_phone1"]?? "",
+        contactPerson: json["contact_person"]?? "",
+        customerIsdCode: json["customer_isd_code"]?? "",
+        contactNo: json["contact_no"]?? "",
+        customerShipAddress1: json["customer_ship_address1"]?? "",
+        customerShipAddress2: json["customer_ship_address2"]?? "",
         customerShipLandmark: json["customer_ship_landmark"],
         customerShipArea: json["customer_ship_area"],
         customerShipDistrict: json["customer_ship_district"],
@@ -548,6 +572,10 @@ class CustomerSiteIdModel {
         "customer_bill_pincode": customerBillPincode?.toString() ?? "",
         "notification_count": notificationCount?.toString() ?? "",
         "og_contact_no": ogContactNo.toString(),
+        "customer_email": customerEmail.toString(),
+        "customer_phone1": customerPhone1.toString(),
+        "contact_person": contactPerson.toString(),
+        "customer_isd_code": customerIsdCode.toString(),
         "customer_bill_state": customerBillState?.toString() ?? "",
         "customer_bill_country": customerBillCountry?.toString() ?? "",
         "customer_bill_isd_code": customerBillIsdCode?.toString() ?? "",

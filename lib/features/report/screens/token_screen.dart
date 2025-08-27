@@ -36,103 +36,170 @@ class TokenScreen extends StatelessWidget {
                     ? const NoDataFoundView(
                         message: "No Token Found",
                       )
-                    : ListView.separated(
-                        separatorBuilder: (context, index) => const Divider(
-                          thickness: 0.5,
-                        ),
+                    : ListView.builder(
+                        // separatorBuilder: (context, index) => const Divider(
+                        //   thickness: 0.5,
+                        // ),
                         itemCount: tokenModel.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            padding: getPadding(
-                                top: 4, bottom: 4, left: 8, right: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                          return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: getPadding(
+                                    top: 4, bottom: 4, left: 8, right: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: CustomText(
-                                        text:
-                                            "Token No. ${tokenModel[index].tokenNo}",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          color: AppColors.primaryText3,
-                                          fontSize: getSize(14),
-                                          fontWeight: FontWeight.w600,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            CustomText(
+                                              text: "Token No. ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: "${tokenModel[index].tokenNo}",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        CustomText(
+                                          text: tokenModel[index].tokenStatus ??
+                                              "N/A",
+                                          style: CustomTextStyle.bodyText.copyWith(
+                                            fontSize: getSize(14),
+                                            color: AppColors.primaryText4,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    CustomText(
-                                      text: tokenModel[index].tokenStatus ??
-                                          "N/A",
-                                      style: CustomTextStyle.bodyText.copyWith(
-                                        fontSize: getSize(14),
-                                        color: AppColors.primaryText4,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                              
+                                    Row(
+                                      children: [
+                                        CustomText(
+                                          text: "Created - ",
+                                          style: CustomTextStyle.bodyText.copyWith(
+                                            color: AppColors.primaryText3,
+                                            fontSize: getSize(14),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        CustomText(
+                                          text:
+                                              tokenModel[index].createdOn ?? "N/A",
+                                          style: CustomTextStyle.bodyText.copyWith(
+                                            color: AppColors.primaryText3,
+                                            fontSize: getSize(14),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // CustomText(
+                                    //   text:
+                                    //       "Created - ${tokenModel[index].createdOn ?? "N/A"}",
+                                    //   style: CustomTextStyle.bodyText.copyWith(
+                                    //     fontSize: getSize(14),
+                                    //     color: AppColors.primaryText4,
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                              
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            CustomText(
+                                              text: "Site Name - ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: tokenModel[index].siteName ??
+                                                  "N/A",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Expanded(
+                                        //   child: CustomText(
+                                        //     text:
+                                        //         "Site Name - ${tokenModel[index].siteName ?? "N/A"}",
+                                        //     style:
+                                        //         CustomTextStyle.bodyText.copyWith(
+                                        //       fontSize: getSize(14),
+                                        //       color: AppColors.primaryText4,
+                                        //       fontWeight: FontWeight.w500,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        Container(
+                                          decoration:
+                                              BoxDecoration(color: Colors.white),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 3, vertical: 2),
+                                          child: CustomText(
+                                            text: tokenModel[index].sectionName ??
+                                                "N/A",
+                                            style:
+                                                CustomTextStyle.bodyText.copyWith(
+                                              fontSize: getSize(14),
+                                              color: AppColors.primaryText4,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        CustomText(
+                                          text: "Expires in 7 days",
+                                          style: CustomTextStyle.bodyText.copyWith(
+                                            fontSize: getSize(13),
+                                            fontStyle: FontStyle.italic,
+                                            color: AppColors.primaryText4,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 30,
+                                        )
+                                      ],
                                     ),
                                   ],
                                 ),
-                                CustomText(
-                                  text:
-                                      "Created - ${tokenModel[index].createdOn ?? "N/A"}",
-                                  style: CustomTextStyle.bodyText.copyWith(
-                                    fontSize: getSize(14),
-                                    color: AppColors.primaryText4,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CustomText(
-                                        text:
-                                            "Site Name - ${tokenModel[index].siteName ?? "N/A"}",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          fontSize: getSize(14),
-                                          color: AppColors.primaryText4,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration:
-                                          BoxDecoration(color: Colors.white),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 3, vertical: 2),
-                                      child: CustomText(
-                                        text: tokenModel[index].sectionName ??
-                                            "N/A",
-                                        style:
-                                            CustomTextStyle.bodyText.copyWith(
-                                          fontSize: getSize(14),
-                                          color: AppColors.primaryText4,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    CustomText(
-                                      text: "Expires in 7 days",
-                                      style: CustomTextStyle.bodyText.copyWith(
-                                        fontSize: getSize(13),
-                                        fontStyle: FontStyle.italic,
-                                        color: AppColors.primaryText4,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 30,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
+                              ),
+                        Divider(
+                          thickness: 0.5,
+                        ),
+                            ],
                           );
                         },
                       ),

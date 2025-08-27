@@ -3,11 +3,13 @@ import 'package:demo/export.dart';
 import '../../report/widget/report_screen_appbar.dart';
 import '../model/food_menu_model.dart';
 
+// ignore: must_be_immutable
 class MealOrderScreen extends StatelessWidget {
   final String id;
 
-  const MealOrderScreen({super.key, required this.id});
-
+  MealOrderScreen({super.key, required this.id});
+  String _selectedDay =
+      DateTime.now().hour >= 12 ? "Tomorrow" : "Today";
   static Widget builder(BuildContext context, String id) {
     return BlocProvider<HomeCubit>(
       create: (context) => HomeCubit()..activeFoodMenu(id),
@@ -39,7 +41,7 @@ class MealOrderScreen extends StatelessWidget {
               final food = (bloc.activeFoodsModel?.data ?? []).toList();
               return Stack(
                 children: [
-                  _foodMenuBuilder(food, context),
+                  _foodMenuBuilder(food, context , _selectedDay == "Today" ? true:false),
                   Visibility(
                     visible: state is HomeLoadingState,
                     child: Container(
@@ -58,69 +60,131 @@ class MealOrderScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showNormalDialog(BuildContext context, String token) async {
-    return await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        // Start a timer to close the dialog after 3 seconds
-        Future.delayed(const Duration(seconds: 3), () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          }
-        });
-        return Dialog(
-          backgroundColor: AppColors.whiteText,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+  ///Single Food Item
+  Widget _singleFoodItemBuilder(FoodItem food ,) {
+    final now = DateTime.now();
+    final isAfterNoon = now.hour >= 12;
+   
+    return StatefulBuilder(builder: (context, setState) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(getSize(8)),
+        child: Container(
+          height: getSize(100),
+          color: AppColors.whiteText,
+          child: Row(
             children: [
-              getSizeBox(height: 40),
-              CustomImageView(
-                imagePath: ImageConstants.orderCompleted,
-                height: getSize(100),
-                width: getSize(100),
+              /// Image
+              Expanded(
+                child: Container(
+                  height: double.infinity,
+                  color: AppColors.white,
+                  child: CustomImageView(
+                    url: food.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              getSizeBox(height: 20),
-              CustomText(
-                textAlign: TextAlign.center,
-                text: "Your  order has been placed\n successfully!",
-                style: CustomTextStyle.normalText.copyWith(
-                    color: Color(0xFF3F3F3F),
-                    fontWeight: FontWeight.w500,
-                    fontSize: getSize(15)),
+              const SizedBox(width: 10),
+
+              /// Name + Cart Button
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        if(!isAfterNoon)
+                        Radio<String>(
+                          value: "Today",
+                          groupValue: _selectedDay,
+                          onChanged: isAfterNoon
+                              ? null
+                              : (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _selectedDay = value;
+                                    });
+                                  }
+                                },
+                          activeColor: Colors.black,
+                        ),
+                        if(!isAfterNoon)
+                        const Text("Today"),
+                        Radio<String>(
+                          value: "Tomorrow",
+                          groupValue: _selectedDay,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _selectedDay = value;
+                              });
+                            }
+                          },
+                          activeColor: Colors.black,
+                        ),
+                        const Text("Tomorrow"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        /// Food name
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                maxLines: 3,
+                                text: food.name ?? "N/A",
+                                style: CustomTextStyle.headingText.copyWith(
+                                  color: AppColors.primaryColor,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: getSize(15),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        /// Cart Actions
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              BlocBuilder<HomeCubit, HomeState>(
+                                builder: (context, state) {
+                                  final cubit = context.read<HomeCubit>();
+                                  final isInCart = cubit.isItemInCart(food.id);
+
+                                  return isInCart
+                                      ? _buildQuantityControls(context, food)
+                                      : _buildAddToCartButton(context, food);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              getSizeBox(height: 10),
-              CustomText(
-                textAlign: TextAlign.center,
-                text: "with Token No: “$token”",
-                style: CustomTextStyle.normalText.copyWith(
-                    color: Color(0xFF646464),
-                    fontWeight: FontWeight.w500,
-                    fontSize: getSize(14)),
-              ),
-              getSizeBox(height: 40),
             ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
-  Widget _buildErrorState(BuildContext context, HomeErrorState state) {
-    return RefreshIndicator(
-      onRefresh: () {
-        context.read<HomeCubit>().activeFoodMenu(id);
-        return Future.delayed(Duration.zero);
-      },
-      backgroundColor: AppColors.white,
-      color: AppColors.primaryColor,
-      child: NoDataFoundView(message: state.error),
-    );
-  }
-
-  Widget _foodMenuBuilder(
+    Widget _foodMenuBuilder(
     List<FoodItem> food,
     BuildContext context,
+    bool isToday,
   ) {
     final bloc = context.read<HomeCubit>();
 
@@ -129,6 +193,8 @@ class MealOrderScreen extends StatelessWidget {
           (element) => element.menucategoryname == "Meals",
         )
         .toList();
+
+  
     return Column(
       children: [
         Expanded(
@@ -224,7 +290,7 @@ class MealOrderScreen extends StatelessWidget {
                   }
 
                   ///Place order
-                  bloc.orderFood(id);
+                  bloc.orderFood(id , isToday);
                 },
                 child: CustomText(
                   text: "Order",
@@ -240,259 +306,243 @@ class MealOrderScreen extends StatelessWidget {
     );
   }
 
-  Widget _foodCartView(BuildContext context) {
-    final bloc = context.read<HomeCubit>();
-    return Column(
-      spacing: getSize(10),
-      children: [
-        // Cart header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomText(
-              text: "Your Cart",
-              style: CustomTextStyle.headingText.copyWith(
-                fontSize: getSize(18),
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
+  Future<void> _showNormalDialog(BuildContext context, String token) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        // Start a timer to close the dialog after 3 seconds
+        Future.delayed(const Duration(seconds: 3), () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+        return Dialog(
+          backgroundColor: AppColors.whiteText,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              getSizeBox(height: 40),
+              CustomImageView(
+                imagePath: ImageConstants.orderCompleted,
+                height: getSize(100),
+                width: getSize(100),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.close, color: AppColors.primaryColor),
-              onPressed: () {
-                bloc.toggleCartView(false);
-              },
-            ),
-          ],
-        ),
-
-        Container(
-          // m: getPadding(all: 16),
-
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            border: Border.all(
-                color: AppColors.primaryColor.withValues(alpha: .84)),
-          ),
-          child: ListView.separated(
-            primary: false,
-            shrinkWrap: true,
-            padding: getPadding(all: 5),
-            itemCount: bloc.cartItems.length,
-            separatorBuilder: (_, __) => getSizeBox(height: 5),
-            itemBuilder: (context, index) {
-              final item = bloc.cartItems[index];
-
-              ///get food item from food list
-              final food = (bloc.activeFoodsModel?.data ?? []).firstWhere(
-                (element) => element.id.toString() == item.id,
-                orElse: () => FoodItem(),
-              );
-              return _singleFoodItemBuilder(food);
-            },
-          ),
-        ),
-
-        if (bloc.cartItems.isNotEmpty) ...[
-          Divider(height: 1),
-          // Padding(
-          //   padding: getPadding(all: 16),
-          //   child: Column(
-          //     children: [
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           CustomText(
-          //             text: "Subtotal",
-          //             style: CustomTextStyle.normalText,
-          //           ),
-          //           CustomText(
-          //             text: "\$${bloc.cartSubtotal.toStringAsFixed(2)}",
-          //             style: CustomTextStyle.normalText.copyWith(
-          //               fontWeight: FontWeight.bold,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //       getSizeBox(height: 8),
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           CustomText(
-          //             text: "Tax",
-          //             style: CustomTextStyle.normalText,
-          //           ),
-          //           CustomText(
-          //             text: "\$${bloc.cartTax.toStringAsFixed(2)}",
-          //             style: CustomTextStyle.normalText.copyWith(
-          //               fontWeight: FontWeight.bold,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //       getSizeBox(height: 8),
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           CustomText(
-          //             text: "Total",
-          //             style: CustomTextStyle.normalText.copyWith(
-          //               fontSize: getSize(16),
-          //             ),
-          //           ),
-          //           CustomText(
-          //             text: "\$${bloc.cartTotal.toStringAsFixed(2)}",
-          //             style: CustomTextStyle.normalText.copyWith(
-          //               fontSize: getSize(16),
-          //               fontWeight: FontWeight.bold,
-          //               color: AppColors.primaryColor,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //       getSizeBox(height: 16),
-          //       SizedBox(
-          //         width: double.infinity,
-          //         child: ElevatedButton(
-          //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: AppColors.primaryColor,
-          //             shape: RoundedRectangleBorder(
-          //               borderRadius: BorderRadius.circular(getSize(8)),
-          //             ),
-          //             padding: getPadding(top: 12, bottom: 12),
-          //           ),
-          //           onPressed: () {
-          //             // Handle checkout
-          //             // bloc.checkout();
-          //           },
-          //           child: CustomText(
-          //             text: "Proceed to Checkout",
-          //             style: CustomTextStyle.normalText.copyWith(
-          //               color: AppColors.white,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          ///section dropdown
-
-          ///Place Order Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(getSize(8)),
-                ),
-                padding: getPadding(top: 12, bottom: 12),
-              ),
-              onPressed: () {
-                ///Check cart is not empty
-                if (bloc.cartItems.isEmpty) {
-                  HapticFeedback.vibrate();
-                  showToast("Please add food items to cart");
-                  return;
-                }
-
-                ///Place order
-                bloc.orderFood(id);
-              },
-              child: CustomText(
-                text: "Order",
+              getSizeBox(height: 20),
+              CustomText(
+                textAlign: TextAlign.center,
+                text: "Your  order has been placed\n successfully!",
                 style: CustomTextStyle.normalText.copyWith(
-                  color: AppColors.white,
-                ),
+                    color: Color(0xFF3F3F3F),
+                    fontWeight: FontWeight.w500,
+                    fontSize: getSize(15)),
               ),
-            ),
-          )
-        ],
-      ],
+              getSizeBox(height: 10),
+              CustomText(
+                textAlign: TextAlign.center,
+                text: "with Token No: “$token”",
+                style: CustomTextStyle.normalText.copyWith(
+                    color: Color(0xFF646464),
+                    fontWeight: FontWeight.w500,
+                    fontSize: getSize(14)),
+              ),
+              getSizeBox(height: 40),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  ///Single Food Item
-  Widget _singleFoodItemBuilder(FoodItem food) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(getSize(8)),
-      child: Container(
-        height: getSize(100),
-        color: AppColors.whiteText,
-        child: Row(
-          spacing: getSize(10),
-          children: [
-            Expanded(
-              child: Container(
-                height: double.infinity,
-                color: AppColors.white,
-                child: CustomImageView(
-                  url: food.imageUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          maxLines: 3,
-                          text: food.name ?? "N/A",
-                          style: CustomTextStyle.headingText.copyWith(
-                            color: AppColors.primaryColor,
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: getSize(15),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        // CustomText(
-                        //   text: food.menucategoryname ?? "N/A",
-                        //   style: CustomTextStyle.headingText.copyWith(
-                        //     color: AppColors.primaryColor,
-                        //     overflow: TextOverflow.ellipsis,
-                        //     fontSize: getSize(16),
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BlocBuilder<HomeCubit, HomeState>(
-                          builder: (context, state) {
-                            final cubit = context.read<HomeCubit>();
-                            final isInCart = cubit.isItemInCart(food.id);
-
-                            return isInCart
-                                ? _buildQuantityControls(context, food)
-                                : _buildAddToCartButton(context, food);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Add More Button Column
-          ],
-        ),
-      ),
+  Widget _buildErrorState(BuildContext context, HomeErrorState state) {
+    return RefreshIndicator(
+      onRefresh: () {
+        context.read<HomeCubit>().activeFoodMenu(id);
+        return Future.delayed(Duration.zero);
+      },
+      backgroundColor: AppColors.white,
+      color: AppColors.primaryColor,
+      child: NoDataFoundView(message: state.error),
     );
   }
 
+
+
+  // Widget _foodCartView(BuildContext context) {
+  //   final bloc = context.read<HomeCubit>();
+  //   return Column(
+  //     spacing: getSize(10),
+  //     children: [
+  //       // Cart header
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           CustomText(
+  //             text: "Your Cart",
+  //             style: CustomTextStyle.headingText.copyWith(
+  //               fontSize: getSize(18),
+  //               fontWeight: FontWeight.bold,
+  //               color: AppColors.primaryColor,
+  //             ),
+  //           ),
+  //           IconButton(
+  //             icon: Icon(Icons.close, color: AppColors.primaryColor),
+  //             onPressed: () {
+  //               bloc.toggleCartView(false);
+  //             },
+  //           ),
+  //         ],
+  //       ),
+
+  //       Container(
+  //         // m: getPadding(all: 16),
+
+  //         decoration: BoxDecoration(
+  //           color: AppColors.white,
+  //           border: Border.all(
+  //               color: AppColors.primaryColor.withValues(alpha: .84)),
+  //         ),
+  //         child: ListView.separated(
+  //           primary: false,
+  //           shrinkWrap: true,
+  //           padding: getPadding(all: 5),
+  //           itemCount: bloc.cartItems.length,
+  //           separatorBuilder: (_, __) => getSizeBox(height: 5),
+  //           itemBuilder: (context, index) {
+  //             final item = bloc.cartItems[index];
+
+  //             ///get food item from food list
+  //             final food = (bloc.activeFoodsModel?.data ?? []).firstWhere(
+  //               (element) => element.id.toString() == item.id,
+  //               orElse: () => FoodItem(),
+  //             );
+  //             return _singleFoodItemBuilder(food);
+  //           },
+  //         ),
+  //       ),
+
+  //       if (bloc.cartItems.isNotEmpty) ...[
+  //         Divider(height: 1),
+  //         // Padding(
+  //         //   padding: getPadding(all: 16),
+  //         //   child: Column(
+  //         //     children: [
+  //         //       Row(
+  //         //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         //         children: [
+  //         //           CustomText(
+  //         //             text: "Subtotal",
+  //         //             style: CustomTextStyle.normalText,
+  //         //           ),
+  //         //           CustomText(
+  //         //             text: "\$${bloc.cartSubtotal.toStringAsFixed(2)}",
+  //         //             style: CustomTextStyle.normalText.copyWith(
+  //         //               fontWeight: FontWeight.bold,
+  //         //             ),
+  //         //           ),
+  //         //         ],
+  //         //       ),
+  //         //       getSizeBox(height: 8),
+  //         //       Row(
+  //         //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         //         children: [
+  //         //           CustomText(
+  //         //             text: "Tax",
+  //         //             style: CustomTextStyle.normalText,
+  //         //           ),
+  //         //           CustomText(
+  //         //             text: "\$${bloc.cartTax.toStringAsFixed(2)}",
+  //         //             style: CustomTextStyle.normalText.copyWith(
+  //         //               fontWeight: FontWeight.bold,
+  //         //             ),
+  //         //           ),
+  //         //         ],
+  //         //       ),
+  //         //       getSizeBox(height: 8),
+  //         //       Row(
+  //         //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         //         children: [
+  //         //           CustomText(
+  //         //             text: "Total",
+  //         //             style: CustomTextStyle.normalText.copyWith(
+  //         //               fontSize: getSize(16),
+  //         //             ),
+  //         //           ),
+  //         //           CustomText(
+  //         //             text: "\$${bloc.cartTotal.toStringAsFixed(2)}",
+  //         //             style: CustomTextStyle.normalText.copyWith(
+  //         //               fontSize: getSize(16),
+  //         //               fontWeight: FontWeight.bold,
+  //         //               color: AppColors.primaryColor,
+  //         //             ),
+  //         //           ),
+  //         //         ],
+  //         //       ),
+  //         //       getSizeBox(height: 16),
+  //         //       SizedBox(
+  //         //         width: double.infinity,
+  //         //         child: ElevatedButton(
+  //         //           style: ElevatedButton.styleFrom(
+  //         //             backgroundColor: AppColors.primaryColor,
+  //         //             shape: RoundedRectangleBorder(
+  //         //               borderRadius: BorderRadius.circular(getSize(8)),
+  //         //             ),
+  //         //             padding: getPadding(top: 12, bottom: 12),
+  //         //           ),
+  //         //           onPressed: () {
+  //         //             // Handle checkout
+  //         //             // bloc.checkout();
+  //         //           },
+  //         //           child: CustomText(
+  //         //             text: "Proceed to Checkout",
+  //         //             style: CustomTextStyle.normalText.copyWith(
+  //         //               color: AppColors.white,
+  //         //             ),
+  //         //           ),
+  //         //         ),
+  //         //       ),
+  //         //     ],
+  //         //   ),
+  //         // ),
+
+  //         ///section dropdown
+
+  //         ///Place Order Button
+  //         SizedBox(
+  //           width: double.infinity,
+  //           child: ElevatedButton(
+  //             style: ElevatedButton.styleFrom(
+  //               backgroundColor: AppColors.primaryColor,
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(getSize(8)),
+  //               ),
+  //               padding: getPadding(top: 12, bottom: 12),
+  //             ),
+  //             onPressed: () {
+  //               ///Check cart is not empty
+  //               if (bloc.cartItems.isEmpty) {
+  //                 HapticFeedback.vibrate();
+  //                 showToast("Please add food items to cart");
+  //                 return;
+  //               }
+
+  //               ///Place order
+  //               bloc.orderFood(id);
+  //             },
+  //             child: CustomText(
+  //               text: "Order",
+  //               style: CustomTextStyle.normalText.copyWith(
+  //                 color: AppColors.white,
+  //               ),
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ],
+  //   );
+  // }
+
+// final now = DateTime.now();
   Widget _buildQuantityControls(BuildContext context, FoodItem item) {
     final cubit = context.read<HomeCubit>();
     final cartItem = cubit.getCartItem(item.id);

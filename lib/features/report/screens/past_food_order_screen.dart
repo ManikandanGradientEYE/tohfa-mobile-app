@@ -35,8 +35,8 @@ class PastFoodOrderScreen extends StatelessWidget {
                 ? const NoDataFoundView(
                     message: "No Past Food Orders Found",
                   )
-                : ListView.separated(
-                    separatorBuilder: (context, index) => const Divider(),
+                : ListView.builder(
+                    // separatorBuilder: (context, index) => const Divider(),
                     itemCount: orderMemoList.length,
                     itemBuilder: (context, index) {
                       PastOrderFood item = orderMemoList[index];
@@ -53,83 +53,144 @@ class PastFoodOrderScreen extends StatelessWidget {
                         date = "N/A";
                       }
 
-                      return Container(
-                        padding: getPadding(all: 8),
-                        child: Column(
-                          spacing: getSize(5),
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              spacing: getSize(10),
+                      return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: getPadding(all: 8),
+                            child: Column(
+                              spacing: getSize(5),
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: CustomText(
-                                    text: item.foodMenuName ?? "N/A",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      color: AppColors.primaryText3,
-                                      fontSize: getSize(14),
-                                      fontWeight: FontWeight.w600,
+                                Row(
+                                  spacing: getSize(10),
+                                  children: [
+                                    Expanded(
+                                      child: CustomText(
+                                        text: item.foodMenuName ?? "N/A",
+                                        style: CustomTextStyle.bodyText.copyWith(
+                                          color: AppColors.primaryText3,
+                                          fontSize: getSize(14),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text: "Token No - ",
+                                          style: CustomTextStyle.bodyText.copyWith(
+                                            color: AppColors.primaryText3,
+                                            fontSize: getSize(14),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        CustomText(
+                                          text: item.foodOrderNo ?? "N/A",
+                                          style: CustomTextStyle.bodyText.copyWith(
+                                            color: AppColors.primaryText3,
+                                            fontSize: getSize(14),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          maxLines: null,
+                                        ),
+                                      ],
+                                    ),
+                          //
+                                  ],
                                 ),
-                                Expanded(
-                                  child: CustomText(
-                                    text: "Token No - ${item.foodOrderNo}",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      color: AppColors.primaryText4,
-                                      fontSize: getSize(13),
-                                      fontWeight: FontWeight.w500,
+                          
+                                ///Date
+                                ///
+                          
+                                Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              /// Date Column
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      text: "Date - ",
+                                      style: CustomTextStyle.bodyText.copyWith(
+                                        color: AppColors.primaryText3,
+                                        fontSize: getSize(14),
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
-                                  ),
+                                    Flexible(
+                                      child: CustomText(
+                                        text: date,
+                                        style: CustomTextStyle.bodyText.copyWith(
+                                          color: AppColors.primaryText3,
+                                          fontSize: getSize(14),
+                                          fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis,
+                                        ),
+                                        maxLines: 2, // allow wrapping
+                                       
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          
+                              /// Order Status Column
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      text: "Order Status - ",
+                                      style: CustomTextStyle.bodyText.copyWith(
+                                        color: AppColors.primaryText3,
+                                        fontSize: getSize(14),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: CustomText(
+                                        text: item.itemDelvStatus ?? "N/A",
+                                        style: CustomTextStyle.bodyText.copyWith(
+                                          color: AppColors.primaryText3,
+                                          fontSize: getSize(14),
+                                          fontWeight: FontWeight.w600,overflow:  TextOverflow.ellipsis,
+                                        ),
+                                        maxLines: 2,
+                                       
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CustomText(
+                                      text: "Expires in 7 days",
+                                      style: CustomTextStyle.bodyText.copyWith(
+                                        fontSize: getSize(13),
+                                        fontStyle: FontStyle.italic,
+                                        color: AppColors.primaryText4,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
-
-                            ///Date
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CustomText(
-                                    text: "Date - $date",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      color: AppColors.primaryText4,
-                                      fontSize: getSize(13),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: CustomText(
-                                    text:
-                                        "Order Status - ${item.itemDelvStatus}",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      color: AppColors.primaryText4,
-                                      fontSize: getSize(13),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomText(
-                                  text: "Expires in 7 days",
-                                  style: CustomTextStyle.bodyText.copyWith(
-                                    fontSize: getSize(13),
-                                    fontStyle: FontStyle.italic,
-                                    color: AppColors.primaryText4,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 30,
-                                )
-                              ],
-                            ),
-                          ],
+                          ),
+                       
+                        Divider(
+                          thickness: 0.5,
                         ),
+                        ],
                       );
                     },
                   );

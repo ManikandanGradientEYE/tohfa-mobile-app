@@ -41,12 +41,12 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
     if (!isItemInCart(foodItem.id)) {
       cartItems.add(
         CartItem(
-          catName: foodItem.menucategoryname ?? "",
-          id: foodItem.id.toString(),
-          name: foodItem.name ?? "",
-          imageUrl: foodItem.imageUrl ?? "",
-          price: double.parse(foodItem.price ?? "0"),
-        ),
+            catName: foodItem.menucategoryname ?? "",
+            id: foodItem.id.toString(),
+            name: foodItem.name ?? "",
+            imageUrl: foodItem.imageUrl ?? "",
+            price: double.parse(foodItem.price ?? "0"),
+            isAvailableToday: foodItem.isAvailableToday == true ? true : false),
       );
     } else {
       final existingItem = cartItems.firstWhere(
@@ -86,7 +86,8 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
   }
 
   // Calculate subtotal
-  double get cartSubtotal => cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+  double get cartSubtotal =>
+      cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
   // Calculate tax (example: 10%)
   double get cartTax => cartSubtotal * 0.1;
@@ -106,11 +107,13 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
       //   (p0) => p0,
       // );
       if (response.success) {
-        activeBannersModel = activeBannersModelFromJson(jsonEncode(response.data));
+        activeBannersModel =
+            activeBannersModelFromJson(jsonEncode(response.data));
         successState();
         // await getEventBanners();
       } else {
-        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(
+            error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -126,11 +129,13 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
         (p0) => p0,
       );
       if (response.success) {
-        activeEventsModel = activeEventsModelFromJson(jsonEncode(response.data));
+        activeEventsModel =
+            activeEventsModelFromJson(jsonEncode(response.data));
         successState();
         // await activeFoodMenu();
       } else {
-        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(
+            error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -145,11 +150,14 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
         "${ApiConstants.activeFoodMenu}?siteId=$id",
         (p0) => p0,
       );
+
+      log(response.data.toString(), name: "activeFoodMenu");
       if (response.success) {
         activeFoodsModel = activeFoodsModelFromJson(jsonEncode(response.data));
         emit(HomeSuccessState());
       } else {
-        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(
+            error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -223,12 +231,14 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
       );
 
       if (response.success) {
-        final List<MeetingsList> meetings = meetingsListFromJson(jsonEncode(response.data));
+        final List<MeetingsList> meetings =
+            meetingsListFromJson(jsonEncode(response.data));
 
         meetingsList = meetings;
         emit(HomeSuccessState());
       } else {
-        emit(HomeErrorState(error: response.errorMessage ?? AppStrings.somethingWentWrong));
+        emit(HomeErrorState(
+            error: response.errorMessage ?? AppStrings.somethingWentWrong));
       }
     } catch (e) {
       emit(HomeErrorState(error: AppStrings.somethingWentWrong));
@@ -280,7 +290,13 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
   }
 
   ///Order food
-  Future<void> orderFood(String siteId) async {
+  Future<void> orderFood(String siteId, isToday) async {
+    log(
+        isToday
+            ? DateFormat("yyyy-MM-dd").format(DateTime.now())
+            : DateFormat("yyyy-MM-dd")
+                .format(DateTime.now().add(const Duration(days: 1))),
+        name: "iatoday date ");
     emit(HomeLoadingState());
     try {
       ///{
@@ -315,7 +331,10 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
       var body = {
         "CustomerSiteId": Singleton.instance.userData!.id.toString(),
         "FoodOrderNo": "0",
-        "FoodOrderDate": DateFormat("yyyy-MM-dd").format(DateTime.now()),
+        "FoodOrderDate": isToday
+            ? DateFormat("yyyy-MM-dd").format(DateTime.now())
+            : DateFormat("yyyy-MM-dd")
+                .format(DateTime.now().add(const Duration(days: 1))),
         "CustomerSiteName": Singleton.instance.userData!.customerSiteName ?? "",
         "TotalQty": cartItems.length.toString(),
         "TotalValue": cartSubtotal.toString(),
@@ -330,6 +349,7 @@ class HomeCubit extends Cubit<HomeState> with ApiClientMixin {
             "ItemRate": item.price.toString(),
             "ItemDelvStatus": "Not Delivered",
             "ItemInstructions": item.specialInstruction,
+            "isAvailableToday": item.isAvailableToday
           };
         }).toList(),
       };
@@ -368,14 +388,15 @@ class CartItem {
   final double price;
   String specialInstruction;
   int quantity;
+  final bool isAvailableToday;
 
-  CartItem({
-    required this.id,
-    required this.name,
-    required this.catName,
-    required this.imageUrl,
-    this.specialInstruction = "",
-    required this.price,
-    this.quantity = 1,
-  });
+  CartItem(
+      {required this.id,
+      required this.name,
+      required this.catName,
+      required this.imageUrl,
+      this.specialInstruction = "",
+      required this.price,
+      this.quantity = 1,
+      required this.isAvailableToday});
 }

@@ -1,4 +1,5 @@
 import 'package:demo/features/auth/sign_in/presentation/pages/verify_otp_screen.dart';
+import 'package:demo/features/profile/screens/edit_screen_new.dart';
 import 'package:demo/features/report/screens/token_screen.dart';
 
 import '../../export.dart';
@@ -60,7 +61,7 @@ class AppRoutes {
         faqScreen: FaqScreen.builder,
         contactUsScreen: ContactUsScreen.builder,
         feedBackScreen: FeedBackScreen.builder,
-        editProfileScreen: EditProfileScreen.builder,
+        editProfileScreen: EditProfileScreenNew.builder,
         tokenScreen: TokenScreen.builder
       };
 }

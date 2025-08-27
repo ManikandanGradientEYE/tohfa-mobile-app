@@ -121,24 +121,63 @@ class _QrScreenState extends State<QrScreen> {
           height: 220,
           placeholderBuilder: (context) => CustomLoading(),
         ),
-        CustomText(
-          textAlign: TextAlign.center,
-          text:
-              "Membership Id: ${data?.membershipCode.split(",").first ?? "N/A"}",
-          style: CustomTextStyle.normalText.copyWith(
+        Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment:  MainAxisAlignment.center,
+                                      children: [
+                                        CustomText(
+                                          text: "Membership Id: ",
+                                                 style: CustomTextStyle.normalText.copyWith(
+              color: Color(0xFF726F6A),
+              fontWeight: FontWeight.w800,
+              fontSize: getSize(20)),
+                                        ),
+                                        CustomText(
+                                          text: data?.membershipCode.split(",").first ?? "N/A",
+                                                  style: CustomTextStyle.normalText.copyWith(
               color: Color(0xFF726F6A),
               fontWeight: FontWeight.w500,
               fontSize: getSize(20)),
-        ),
-        CustomText(
-          textAlign: TextAlign.center,
-          text:
-              "Joined: ${(data2?.createdOn != null ? data2?.createdOn.toString() : "N/A") ?? "N/A"}",
-          style: CustomTextStyle.normalText.copyWith(
+                                        ),
+                                      ],
+                                    ),
+        // CustomText(
+        //   textAlign: TextAlign.center,
+        //   text:
+        //       "Membership Id: ${data?.membershipCode.split(",").first ?? "N/A"}",
+        //   style: CustomTextStyle.normalText.copyWith(
+        //       color: Color(0xFF726F6A),
+        //       fontWeight: FontWeight.w500,
+        //       fontSize: getSize(20)),
+        // ),
+
+             Row(mainAxisAlignment:  MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text: "Joined: ",
+                                          style: CustomTextStyle.normalText.copyWith(
+              color: Color(0xFF726F6A),
+              fontWeight: FontWeight.w800,
+              fontSize: getSize(17)),
+                                        ),
+                                        CustomText(
+                                          text:(data2?.createdOn != null ? data2?.createdOn.toString() : "N/A") ?? "N/A",
+                                           style: CustomTextStyle.normalText.copyWith(
               color: Color(0xFF726F6A),
               fontWeight: FontWeight.w500,
               fontSize: getSize(17)),
-        ),
+                                        ),
+                                      ],
+                                    ),
+        // CustomText(
+        //   textAlign: TextAlign.center,
+        //   text:
+        //       "Joined: ${(data2?.createdOn != null ? data2?.createdOn.toString() : "N/A") ?? "N/A"}",
+        //   style: CustomTextStyle.normalText.copyWith(
+        //       color: Color(0xFF726F6A),
+        //       fontWeight: FontWeight.w500,
+        //       fontSize: getSize(17)),
+        // ),
       ],
     );
   }

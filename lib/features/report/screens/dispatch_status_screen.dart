@@ -43,112 +43,244 @@ class DispatchStatusScreen extends StatelessWidget {
                 ? const NoDataFoundView(
                     message: "No Dispatch Status Found",
                   )
-                : ListView.separated(
-                    separatorBuilder: (context, index) => const Divider(),
+                : ListView.builder(
+                    // separatorBuilder: (context, index) => const Divider(),
                     itemCount: orderMemoList.length,
                     itemBuilder: (context, index) {
                       Datum item = orderMemoList[index];
 
-                      return Container(
-                        padding: getPadding(all: 8),
-                        child: Column(
-                          spacing: getSize(5),
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: getPadding(all: 8),
+                            child: Column(
+                              spacing: getSize(5),
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CustomText(
-                                  text: "LR No: ${item.refDocNo ?? "N/A"}",
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                      Row(
+                                          children: [
+                                            CustomText(
+                                              text: "LR No: ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: item.refDocNo ?? "N/A",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    // CustomText(
+                                    //   text: "LR No: ${item.refDocNo ?? "N/A"}",
+                                    //   style: CustomTextStyle.bodyText.copyWith(
+                                    //     color: AppColors.primaryText3,
+                                    //     fontSize: getSize(14),
+                                    //     fontWeight: FontWeight.w600,
+                                    //   ),
+                                    // ),
+                          
+                                    
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.35,
+                                      child: Row(
+                                          children: [
+                                            CustomText(
+                                              text: "Dated: ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: dateFormate(item.refDocDate ?? "N/A"),
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                                getSizeBox(height: 1),
+                                Row(
+                                          children: [
+                                            CustomText(
+                                              text: "Transporter: ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: item.transporterName ?? "N/A",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                // CustomText(
+                                //   text: "Transporter: ${item.transporterName ?? "N/A"}",
+                                //   style: CustomTextStyle.bodyText.copyWith(
+                                //     fontSize: getSize(14),
+                                //     color: AppColors.primaryText4,
+                                //     fontWeight: FontWeight.w500,
+                                //   ),
+                                // ),
+                                getSizeBox(height: 1),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                          children: [
+                                            CustomText(
+                                              text: "Type: ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: item.transactionType ?? "N/A",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    // CustomText(
+                                    //   text: "Type: ${item.transactionType ?? "N/A"}",
+                                    //   style: CustomTextStyle.bodyText.copyWith(
+                                    //     fontSize: getSize(14),
+                                    //     color: AppColors.primaryText4,
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                          
+                                     
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.35,
+                                      child: Row(
+                                          children: [
+                                            CustomText(
+                                              text: "Value: ",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: "${item.declarationAmount ?? "N/A"}",
+                                              style:
+                                                  CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),),
+                                  ],
+                                ),
+                                getSizeBox(height: 1),
+                          
+                             Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: "Remarks - ",
+                                style: CustomTextStyle.bodyText.copyWith(
+                                  color: AppColors.primaryText3,
+                                  fontSize: getSize(14),
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              Expanded(
+                                child: CustomText(
+                                  text: item.remarks ?? "N/A",
                                   style: CustomTextStyle.bodyText.copyWith(
                                     color: AppColors.primaryText3,
                                     fontSize: getSize(14),
                                     fontWeight: FontWeight.w600,
                                   ),
+                                 
+                                  maxLines: null,
+                               
                                 ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.35,
-                                  child: CustomText(
-                                    text: "Dated: ${dateFormate(item.refDocDate ?? "N/A")}",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      color: AppColors.primaryText3,
-                                      fontSize: getSize(14),
-                                      fontWeight: FontWeight.w600,
+                              ),
+                            ],
+                          ),
+                                // CustomText(
+                                //   text: "Remarks - ${item.remarks ?? "N/A"}",
+                                //   style: CustomTextStyle.bodyText.copyWith(
+                                //     fontSize: getSize(14),
+                                //     color: AppColors.primaryText4,
+                                //     fontWeight: FontWeight.w500,
+                                //   ),
+                                // ),
+                                getSizeBox(height: 1),
+                                Wrap(
+                                  children: List.generate(
+                                    item.documentUrl!.split(',').length,
+                                    (index) => InkWell(
+                                      onTap: () async {
+                                        await downloadImagesToDevice(
+                                            context, item.documentUrl!.split(',')[index]);
+                                      },
+                                      child: CustomText(
+                                        text: item.documentUrl!.split(',').length == index + 1
+                                            ? "Download LR${index + 1}"
+                                            : index == 0
+                                                ? "Download LR   |   "
+                                                : "Download LR${index + 1}   |   ",
+                                        style: TextStyle(
+                                          fontSize: getSize(15),
+                                          color: AppColors.primaryText4,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            getSizeBox(height: 1),
-                            CustomText(
-                              text: "Transporter: ${item.transporterName ?? "N/A"}",
-                              style: CustomTextStyle.bodyText.copyWith(
-                                fontSize: getSize(14),
-                                color: AppColors.primaryText4,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            getSizeBox(height: 1),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                  text: "Type: ${item.transactionType ?? "N/A"}",
-                                  style: CustomTextStyle.bodyText.copyWith(
-                                    fontSize: getSize(14),
-                                    color: AppColors.primaryText4,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.35,
-                                  child: CustomText(
-                                    text: "Value: ${item.declarationAmount ?? "N/A"}",
-                                    style: CustomTextStyle.bodyText.copyWith(
-                                      fontSize: getSize(14),
-                                      color: AppColors.primaryText4,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            getSizeBox(height: 1),
-                            CustomText(
-                              text: "Remarks - ${item.remarks ?? "N/A"}",
-                              style: CustomTextStyle.bodyText.copyWith(
-                                fontSize: getSize(14),
-                                color: AppColors.primaryText4,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            getSizeBox(height: 1),
-                            Wrap(
-                              children: List.generate(
-                                item.documentUrl!.split(',').length,
-                                (index) => InkWell(
-                                  onTap: () async {
-                                    await downloadImagesToDevice(
-                                        context, item.documentUrl!.split(',')[index]);
-                                  },
-                                  child: CustomText(
-                                    text: item.documentUrl!.split(',').length == index + 1
-                                        ? "Download LR${index + 1}"
-                                        : index == 0
-                                            ? "Download LR   |   "
-                                            : "Download LR${index + 1}   |   ",
-                                    style: TextStyle(
-                                      fontSize: getSize(15),
-                                      color: AppColors.primaryText4,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
+                      
+                       Divider(
+                          thickness: 0.5,
                         ),
+                        ],
                       );
                     },
                   );

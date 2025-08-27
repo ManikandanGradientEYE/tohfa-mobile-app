@@ -1380,10 +1380,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 ///Place order
-                bloc.orderFood(bloc.selectedVisitStatusModel!.siteId.toString());
+                bloc.orderFood(bloc.selectedVisitStatusModel!.siteId.toString() , true);
               },
               child: CustomText(
-                text: "Order",
+                text: "Order 12",
                 style: CustomTextStyle.normalText.copyWith(
                   color: AppColors.white,
                 ),

@@ -110,22 +110,22 @@ class ProfileScreen extends StatelessWidget {
                                   decoration:
                                       BoxDecoration(shape: BoxShape.circle, color: AppColors.white),
                                   child: Icon(
-                                    Icons.edit_outlined,
+                                    Icons.remove_red_eye,
                                     color: Color(0xFF606060),
-                                    size: getSize(15),
+                                    size: getSize(18),
                                   ),
                                 ),
                               )
                             ],
                           ),
-                          CustomText(
-                            textAlign: TextAlign.center,
-                            text: Singleton.instance.userData?.customerBillEmail ?? "N/A",
-                            style: CustomTextStyle.normalText.copyWith(
-                                color: Color(0xFF656565),
-                                fontWeight: FontWeight.w400,
-                                fontSize: getSize(13)),
-                          ),
+                          // CustomText(
+                          //   textAlign: TextAlign.center,
+                          //   text: Singleton.instance.userData?.customerBillEmail ?? "N/A",
+                          //   style: CustomTextStyle.normalText.copyWith(
+                          //       color: Color(0xFF656565),
+                          //       fontWeight: FontWeight.w400,
+                          //       fontSize: getSize(13)),
+                          // ),
                           getSizeBox(height: 10),
                           // Row(
                           //   children: [
