@@ -8,8 +8,7 @@ class MealOrderScreen extends StatelessWidget {
   final String id;
 
   MealOrderScreen({super.key, required this.id});
-  String _selectedDay =
-      DateTime.now().hour >= 12 ? "Tomorrow" : "Today";
+  String _selectedDay = DateTime.now().hour >= 14 ? "Tomorrow" : "Today";
   static Widget builder(BuildContext context, String id) {
     return BlocProvider<HomeCubit>(
       create: (context) => HomeCubit()..activeFoodMenu(id),
@@ -41,7 +40,7 @@ class MealOrderScreen extends StatelessWidget {
               final food = (bloc.activeFoodsModel?.data ?? []).toList();
               return Stack(
                 children: [
-                  _foodMenuBuilder(food, context , _selectedDay == "Today" ? true:false),
+                  _foodMenuBuilder(food, context, _selectedDay == "Today" ? true : false),
                   Visibility(
                     visible: state is HomeLoadingState,
                     child: Container(
@@ -61,10 +60,12 @@ class MealOrderScreen extends StatelessWidget {
   }
 
   ///Single Food Item
-  Widget _singleFoodItemBuilder(FoodItem food ,) {
+  Widget _singleFoodItemBuilder(
+    FoodItem food,
+  ) {
     final now = DateTime.now();
-    final isAfterNoon = now.hour >= 12;
-   
+    final isAfterNoon = now.hour >= 14;
+
     return StatefulBuilder(builder: (context, setState) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(getSize(8)),
@@ -94,23 +95,22 @@ class MealOrderScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        if(!isAfterNoon)
-                        Radio<String>(
-                          value: "Today",
-                          groupValue: _selectedDay,
-                          onChanged: isAfterNoon
-                              ? null
-                              : (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      _selectedDay = value;
-                                    });
-                                  }
-                                },
-                          activeColor: Colors.black,
-                        ),
-                        if(!isAfterNoon)
-                        const Text("Today"),
+                        if (!isAfterNoon)
+                          Radio<String>(
+                            value: "Today",
+                            groupValue: _selectedDay,
+                            onChanged: isAfterNoon
+                                ? null
+                                : (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        _selectedDay = value;
+                                      });
+                                    }
+                                  },
+                            activeColor: Colors.black,
+                          ),
+                        if (!isAfterNoon) const Text("Today"),
                         Radio<String>(
                           value: "Tomorrow",
                           groupValue: _selectedDay,
@@ -181,7 +181,7 @@ class MealOrderScreen extends StatelessWidget {
     });
   }
 
-    Widget _foodMenuBuilder(
+  Widget _foodMenuBuilder(
     List<FoodItem> food,
     BuildContext context,
     bool isToday,
@@ -194,7 +194,6 @@ class MealOrderScreen extends StatelessWidget {
         )
         .toList();
 
-  
     return Column(
       children: [
         Expanded(
@@ -255,8 +254,7 @@ class MealOrderScreen extends StatelessWidget {
 
                   // scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => getSizeBox(height: 10),
-                  itemBuilder: (context, index) =>
-                      _singleFoodItemBuilder(newFoodList[index]),
+                  itemBuilder: (context, index) => _singleFoodItemBuilder(newFoodList[index]),
                   shrinkWrap: true,
                   itemCount: newFoodList.length,
                 ),
@@ -290,7 +288,7 @@ class MealOrderScreen extends StatelessWidget {
                   }
 
                   ///Place order
-                  bloc.orderFood(id , isToday);
+                  bloc.orderFood(id, isToday);
                 },
                 child: CustomText(
                   text: "Order",
@@ -333,18 +331,14 @@ class MealOrderScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 text: "Your  order has been placed\n successfully!",
                 style: CustomTextStyle.normalText.copyWith(
-                    color: Color(0xFF3F3F3F),
-                    fontWeight: FontWeight.w500,
-                    fontSize: getSize(15)),
+                    color: Color(0xFF3F3F3F), fontWeight: FontWeight.w500, fontSize: getSize(15)),
               ),
               getSizeBox(height: 10),
               CustomText(
                 textAlign: TextAlign.center,
                 text: "with Token No: “$token”",
                 style: CustomTextStyle.normalText.copyWith(
-                    color: Color(0xFF646464),
-                    fontWeight: FontWeight.w500,
-                    fontSize: getSize(14)),
+                    color: Color(0xFF646464), fontWeight: FontWeight.w500, fontSize: getSize(14)),
               ),
               getSizeBox(height: 40),
             ],
@@ -365,8 +359,6 @@ class MealOrderScreen extends StatelessWidget {
       child: NoDataFoundView(message: state.error),
     );
   }
-
-
 
   // Widget _foodCartView(BuildContext context) {
   //   final bloc = context.read<HomeCubit>();
@@ -565,8 +557,7 @@ class MealOrderScreen extends StatelessWidget {
               InkWell(
                 onTap: () {
                   if (cartItem.quantity > 1) {
-                    cubit.updateCartItemQuantity(
-                        cartItem, cartItem.quantity - 1);
+                    cubit.updateCartItemQuantity(cartItem, cartItem.quantity - 1);
                   } else {
                     cubit.removeFromCart(cartItem);
                   }
@@ -609,8 +600,7 @@ class MealOrderScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                child: Icon(Icons.more_vert,
-                    color: AppColors.primaryColor, size: getSize(20)),
+                child: Icon(Icons.more_vert, color: AppColors.primaryColor, size: getSize(20)),
                 onTap: () => _showSpecialInstructionsDialog(context, item),
               ),
             ],
@@ -654,8 +644,7 @@ class MealOrderScreen extends StatelessWidget {
   }
 
   void _showSpecialInstructionsDialog(BuildContext context, FoodItem food) {
-    final TextEditingController instructionsController =
-        TextEditingController();
+    final TextEditingController instructionsController = TextEditingController();
     final cubit = context.read<HomeCubit>();
     final currentCartItem = cubit.getCartItem(food.id);
     instructionsController.text = currentCartItem.specialInstruction;
@@ -754,8 +743,7 @@ class MealOrderScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       style: TextButton.styleFrom(
-                        padding: getPadding(
-                            left: 16, right: 16, top: 10, bottom: 10),
+                        padding: getPadding(left: 16, right: 16, top: 10, bottom: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(getSize(8)),
                         ),
@@ -772,8 +760,7 @@ class MealOrderScreen extends StatelessWidget {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
-                        padding: getPadding(
-                            left: 20, right: 20, top: 10, bottom: 10),
+                        padding: getPadding(left: 20, right: 20, top: 10, bottom: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(getSize(8)),
                         ),
@@ -781,8 +768,7 @@ class MealOrderScreen extends StatelessWidget {
                       onPressed: () {
                         if (instructionsController.text.isNotEmpty) {
                           // Add the special instructions to the cart
-                          cubit.addSpecialInstruction(
-                              instructionsController.text, currentCartItem);
+                          cubit.addSpecialInstruction(instructionsController.text, currentCartItem);
                         }
                         Navigator.pop(context);
                       },

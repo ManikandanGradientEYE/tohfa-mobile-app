@@ -44,49 +44,56 @@ class OrderMemoScreen extends StatelessWidget {
 
                           String date = "N/A";
                           try {
-                            final inputFormat =
-                                DateFormat("MM/dd/yyyy HH:mm:ss");
+                            final inputFormat = DateFormat("MM/dd/yyyy HH:mm:ss");
                             final outputFormat = DateFormat("dd MMMM yyyy");
-                            final parsedDate =
-                                inputFormat.parse(item.orDate ?? "");
+                            final parsedDate = inputFormat.parse(item.orDate ?? "");
                             date = outputFormat.format(parsedDate);
                           } catch (e) {
                             logV("Error===>$e");
                             date = "N/A";
                           }
 
-                          return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 padding: getPadding(all: 8),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      spacing: getSize(10),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      // spacing: getSize(10),
                                       children: [
-                                        Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text: "Order Memo No. ",
-                                          style: CustomTextStyle.bodyText.copyWith(
-                                            color: AppColors.primaryText3,
-                                            fontSize: getSize(14),
-                                            fontWeight: FontWeight.w800,
+                                        Expanded(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CustomText(
+                                                text: "Order Memo No.",
+                                                style: CustomTextStyle.bodyText.copyWith(
+                                                  color: AppColors.primaryText3,
+                                                  fontSize: getSize(14),
+                                                  fontWeight: FontWeight.w800,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: CustomText(
+                                                  text: item.orNo ?? "N/A",
+                                                  style: CustomTextStyle.bodyText.copyWith(
+                                                    color: AppColors.primaryText3,
+                                                    fontSize: getSize(14),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        CustomText(
-                                          text: item.orNo ?? "N/A",
-                                          style: CustomTextStyle.bodyText.copyWith(
-                                            color: AppColors.primaryText3,
-                                            fontSize: getSize(14),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: null,
-                                        ),
-                                      ],
-                                    ),
                                         // Expanded(
                                         //   child: CustomText(
                                         //     text: "Order Memo No. ${item.orNo}",
@@ -98,30 +105,17 @@ class OrderMemoScreen extends StatelessWidget {
                                         //     ),
                                         //   ),
                                         // ),
-                              
+
                                         ///Status builder
-                                        Container(
-                                          padding: getPadding(all: 4),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                            borderRadius: BorderRadius.circular(5),
-                                          ),
-                                          child: CustomText(
-                                            text: item.orStatus ?? "N/A",
-                                            style:
-                                                CustomTextStyle.bodyText.copyWith(
-                                              fontSize: getSize(14),
-                                              color: AppColors.primaryText4,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
-                              
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+
                                     ///Date
-                                  Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         CustomText(
                                           text: "Date - ",
@@ -140,6 +134,23 @@ class OrderMemoScreen extends StatelessWidget {
                                           ),
                                           maxLines: null,
                                         ),
+                                        Spacer(),
+                                        Container(
+                                          alignment: Alignment.centerRight,
+                                          padding: getPadding(all: 4),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: CustomText(
+                                            text: item.orStatus ?? "N/A",
+                                            style: CustomTextStyle.bodyText.copyWith(
+                                              fontSize: getSize(14),
+                                              color: AppColors.primaryText4,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        )
                                       ],
                                     ),
                                     // CustomText(
@@ -150,56 +161,60 @@ class OrderMemoScreen extends StatelessWidget {
                                     //     color: AppColors.primaryText4,
                                     //   ),
                                     // ),
-                              
+
                                     ///Text :- [Quantity, Value] & Button :- [ Download pdf ]
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,spacing: 20,
+
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      spacing: 20,
                                       children: [
                                         Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text: "Quantity - ",
-                                          style: CustomTextStyle.bodyText.copyWith(
-                                            color: AppColors.primaryText3,
-                                            fontSize: getSize(14),
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CustomText(
+                                              text: "Quantity - ",
+                                              style: CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: item.totalQty ?? "N/A",
+                                              style: CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              maxLines: null,
+                                            ),
+                                          ],
                                         ),
-                                        CustomText(
-                                          text: item.totalQty ?? "N/A",
-                                          style: CustomTextStyle.bodyText.copyWith(
-                                            color: AppColors.primaryText3,
-                                            fontSize: getSize(14),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: null,
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CustomText(
+                                              text: "Value - ",
+                                              style: CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            CustomText(
+                                              text: item.totalGrossAmt ?? "N/A",
+                                              style: CustomTextStyle.bodyText.copyWith(
+                                                color: AppColors.primaryText3,
+                                                fontSize: getSize(14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              maxLines: null,
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    
-Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text: "Value - ",
-                                          style: CustomTextStyle.bodyText.copyWith(
-                                            color: AppColors.primaryText3,
-                                            fontSize: getSize(14),
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                        CustomText(
-                                          text: item.totalGrossAmt ?? "N/A",
-                                          style: CustomTextStyle.bodyText.copyWith(
-                                            color: AppColors.primaryText3,
-                                            fontSize: getSize(14),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: null,
-                                        ),
-                                      ],
-                                    ),
-                                    
                                         Expanded(
                                           child: Row(
                                             children: [
@@ -207,8 +222,7 @@ Row(
                                               InkWell(
                                                 onTap: () {
                                                   bloc.downloadOrderMemo(
-                                                      item.id.toString(),
-                                                      item.siteId.toString());
+                                                      item.id.toString(), item.siteId.toString());
                                                 },
                                                 child: Container(
                                                   padding: getPadding(all: 4),
@@ -217,13 +231,11 @@ Row(
                                                     border: Border.all(
                                                       color: AppColors.green,
                                                     ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(5),
+                                                    borderRadius: BorderRadius.circular(5),
                                                   ),
                                                   child: CustomText(
                                                     text: "Download PDF",
-                                                    style: CustomTextStyle.bodyText
-                                                        .copyWith(
+                                                    style: CustomTextStyle.bodyText.copyWith(
                                                       fontSize: getSize(10),
                                                       fontWeight: FontWeight.w500,
                                                     ),
@@ -255,9 +267,9 @@ Row(
                                   ],
                                 ),
                               ),
-                           Divider(
-                          thickness: 0.5,
-                        ),
+                              Divider(
+                                thickness: 0.5,
+                              ),
                             ],
                           );
                         },
