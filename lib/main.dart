@@ -4,8 +4,7 @@ import 'export.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isAndroid) {
-  }
+  if (Platform.isAndroid) {}
   await Singleton.instance.appInit();
 
   ///await Firebase.initializeApp();
@@ -13,6 +12,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  HttpOverrides.global = MyHttpOverrides();
   await Future.delayed(Duration(seconds: 2));
   runApp(const MyApp());
 }
@@ -49,4 +49,12 @@ String _getRout() {
   // return AppRoutes.validatePhoneScreen;
   // return AppRoutes.loginOptionScreen;
   return AppRoutes.splashScreen;
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (_, __, ___) => true;
+  }
 }
