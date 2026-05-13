@@ -31,52 +31,56 @@ class TokenModel {
   dynamic modifiedBy;
   dynamic modifiedOn;
   bool? isActive;
+  String? totalQty;
+  String? totalAmount;
 
-  TokenModel({
-    this.tokenNo,
-    this.customersId,
-    this.sectionCode,
-    this.sectionName,
-    this.customerSiteId,
-    this.orderMemoHeaderId,
-    this.refOrDate,
-    this.tokenStatus,
-    this.customerName,
-    this.customerSiteName,
-    this.siteId,
-    this.orNo,
-    this.orStatus,
-    this.siteName,
-    this.id,
-    this.createdBy,
-    this.createdOn,
-    this.modifiedBy,
-    this.modifiedOn,
-    this.isActive,
-  });
+  TokenModel(
+      {this.tokenNo,
+      this.customersId,
+      this.sectionCode,
+      this.sectionName,
+      this.customerSiteId,
+      this.orderMemoHeaderId,
+      this.refOrDate,
+      this.tokenStatus,
+      this.customerName,
+      this.customerSiteName,
+      this.siteId,
+      this.orNo,
+      this.orStatus,
+      this.siteName,
+      this.id,
+      this.createdBy,
+      this.createdOn,
+      this.modifiedBy,
+      this.modifiedOn,
+      this.isActive,
+      this.totalQty,
+      this.totalAmount});
 
   factory TokenModel.fromJson(Map<String, dynamic> json) => TokenModel(
-        tokenNo: json["tokenNo"],
-        customersId: json["customersId"],
-        sectionCode: json["section_code"],
-        sectionName: json["section_name"],
-        customerSiteId: json["customerSiteId"],
-        orderMemoHeaderId: json["orderMemoHeaderId"],
-        refOrDate: json["refORDate"],
-        tokenStatus: json["tokenStatus"],
-        customerName: json["customer_name"],
-        customerSiteName: json["customer_site_name"],
-        siteId: json["siteId"],
-        orNo: json["orNo"],
-        orStatus: json["orStatus"],
-        siteName: json["site_name"],
-        id: json["id"],
-        createdBy: json["createdBy"],
-        createdOn: json["createdOn"],
-        modifiedBy: json["modifiedBy"],
-        modifiedOn: json["modifiedOn"],
-        isActive: json["isActive"],
-      );
+      tokenNo: json["tokenNo"],
+      customersId: json["customersId"],
+      sectionCode: json["section_code"],
+      sectionName: json["section_name"],
+      customerSiteId: json["customerSiteId"],
+      orderMemoHeaderId: json["orderMemoHeaderId"],
+      refOrDate: json["refORDate"],
+      tokenStatus: json["tokenStatus"],
+      customerName: json["customer_name"],
+      customerSiteName: json["customer_site_name"],
+      siteId: json["siteId"],
+      orNo: json["orNo"],
+      orStatus: json["orStatus"],
+      siteName: json["site_name"],
+      id: json["id"],
+      createdBy: json["createdBy"],
+      createdOn: json["createdOn"],
+      modifiedBy: json["modifiedBy"],
+      modifiedOn: json["modifiedOn"],
+      isActive: json["isActive"],
+      totalQty: json['totalQty'],
+      totalAmount: json['totalGrossAmt']);
 
   Map<String, dynamic> toJson() => {
         "tokenNo": tokenNo,
@@ -99,5 +103,7 @@ class TokenModel {
         "modifiedBy": modifiedBy,
         "modifiedOn": modifiedOn,
         "isActive": isActive,
+        "totalQty": totalQty,
+        "totalGrossAmt": totalAmount
       };
 }

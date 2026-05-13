@@ -42,7 +42,8 @@ class TokenScreen extends StatelessWidget {
                         // ),
                         itemCount: tokenModel.length,
                         itemBuilder: (context, index) {
-                          return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 padding: getPadding(
@@ -58,17 +59,18 @@ class TokenScreen extends StatelessWidget {
                                           children: [
                                             CustomText(
                                               text: "Token No. ",
-                                              style:
-                                                  CustomTextStyle.bodyText.copyWith(
+                                              style: CustomTextStyle.bodyText
+                                                  .copyWith(
                                                 color: AppColors.primaryText3,
                                                 fontSize: getSize(14),
                                                 fontWeight: FontWeight.w800,
                                               ),
                                             ),
                                             CustomText(
-                                              text: "${tokenModel[index].tokenNo}",
-                                              style:
-                                                  CustomTextStyle.bodyText.copyWith(
+                                              text:
+                                                  "${tokenModel[index].tokenNo}",
+                                              style: CustomTextStyle.bodyText
+                                                  .copyWith(
                                                 color: AppColors.primaryText3,
                                                 fontSize: getSize(14),
                                                 fontWeight: FontWeight.w600,
@@ -79,7 +81,8 @@ class TokenScreen extends StatelessWidget {
                                         CustomText(
                                           text: tokenModel[index].tokenStatus ??
                                               "N/A",
-                                          style: CustomTextStyle.bodyText.copyWith(
+                                          style:
+                                              CustomTextStyle.bodyText.copyWith(
                                             fontSize: getSize(14),
                                             color: AppColors.primaryText4,
                                             fontWeight: FontWeight.w500,
@@ -87,21 +90,23 @@ class TokenScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                              
+
                                     Row(
                                       children: [
                                         CustomText(
                                           text: "Created - ",
-                                          style: CustomTextStyle.bodyText.copyWith(
+                                          style:
+                                              CustomTextStyle.bodyText.copyWith(
                                             color: AppColors.primaryText3,
                                             fontSize: getSize(14),
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
                                         CustomText(
-                                          text:
-                                              tokenModel[index].createdOn ?? "N/A",
-                                          style: CustomTextStyle.bodyText.copyWith(
+                                          text: tokenModel[index].createdOn ??
+                                              "N/A",
+                                          style:
+                                              CustomTextStyle.bodyText.copyWith(
                                             color: AppColors.primaryText3,
                                             fontSize: getSize(14),
                                             fontWeight: FontWeight.w600,
@@ -118,7 +123,7 @@ class TokenScreen extends StatelessWidget {
                                     //     fontWeight: FontWeight.w500,
                                     //   ),
                                     // ),
-                              
+
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -127,18 +132,19 @@ class TokenScreen extends StatelessWidget {
                                           children: [
                                             CustomText(
                                               text: "Site Name - ",
-                                              style:
-                                                  CustomTextStyle.bodyText.copyWith(
+                                              style: CustomTextStyle.bodyText
+                                                  .copyWith(
                                                 color: AppColors.primaryText3,
                                                 fontSize: getSize(14),
                                                 fontWeight: FontWeight.w800,
                                               ),
                                             ),
                                             CustomText(
-                                              text: tokenModel[index].siteName ??
-                                                  "N/A",
-                                              style:
-                                                  CustomTextStyle.bodyText.copyWith(
+                                              text:
+                                                  tokenModel[index].siteName ??
+                                                      "N/A",
+                                              style: CustomTextStyle.bodyText
+                                                  .copyWith(
                                                 color: AppColors.primaryText3,
                                                 fontSize: getSize(14),
                                                 fontWeight: FontWeight.w600,
@@ -159,15 +165,16 @@ class TokenScreen extends StatelessWidget {
                                         //   ),
                                         // ),
                                         Container(
-                                          decoration:
-                                              BoxDecoration(color: Colors.white),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white),
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 3, vertical: 2),
                                           child: CustomText(
-                                            text: tokenModel[index].sectionName ??
-                                                "N/A",
-                                            style:
-                                                CustomTextStyle.bodyText.copyWith(
+                                            text:
+                                                tokenModel[index].sectionName ??
+                                                    "N/A",
+                                            style: CustomTextStyle.bodyText
+                                                .copyWith(
                                               fontSize: getSize(14),
                                               color: AppColors.primaryText4,
                                               fontWeight: FontWeight.w500,
@@ -176,12 +183,82 @@ class TokenScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+
+                                    tokenModel[index].tokenStatus == "Completed"
+                                        ? Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  CustomText(
+                                                    text: "Total Quantity - ",
+                                                    style: CustomTextStyle
+                                                        .bodyText
+                                                        .copyWith(
+                                                      color: AppColors
+                                                          .primaryText3,
+                                                      fontSize: getSize(14),
+                                                      fontWeight: 
+                                                          FontWeight.w800,
+                                                    ),
+                                                  ),
+                                                  CustomText(
+                                                    text: tokenModel[index]
+                                                            .totalQty ??
+                                                        "N/A",
+                                                    style: CustomTextStyle
+                                                        .bodyText
+                                                        .copyWith(
+                                                      color: AppColors
+                                                          .primaryText3,
+                                                      fontSize: getSize(14),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  CustomText(
+                                                    text: "Total Amount - ",
+                                                    style: CustomTextStyle
+                                                        .bodyText
+                                                        .copyWith(
+                                                      color: AppColors
+                                                          .primaryText3,
+                                                      fontSize: getSize(14),
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
+                                                  ),
+                                                  CustomText(
+                                                    text: tokenModel[index]
+                                                            .totalAmount ??
+                                                        "N/A",
+                                                    style: CustomTextStyle
+                                                        .bodyText
+                                                        .copyWith(
+                                                      color: AppColors
+                                                          .primaryText3,
+                                                      fontSize: getSize(14),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        : SizedBox.shrink(),
+
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         CustomText(
                                           text: "Expires in 7 days",
-                                          style: CustomTextStyle.bodyText.copyWith(
+                                          style:
+                                              CustomTextStyle.bodyText.copyWith(
                                             fontSize: getSize(13),
                                             fontStyle: FontStyle.italic,
                                             color: AppColors.primaryText4,
@@ -196,9 +273,9 @@ class TokenScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                        Divider(
-                          thickness: 0.5,
-                        ),
+                              Divider(
+                                thickness: 0.5,
+                              ),
                             ],
                           );
                         },
