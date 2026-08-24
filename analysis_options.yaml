@@ -10,6 +10,14 @@
 analyzer:
   errors:
     use_key_in_widget_constructors: ignore ignore ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: package:flutter_lints/flutter.yaml
 
 linter:

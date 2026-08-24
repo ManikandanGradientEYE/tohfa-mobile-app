@@ -59,7 +59,7 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
           onPageFinished: (String url) async {
             setState(() => _isLoading = false);
             await _controller.runJavaScript(
-                '''  document.body.innerHTML = `<iframe src="https://calendly.com/d/csxh-3tn-xqs?name=$encodedName&email=$encodedEmail&a1=8087382829&a2=GE%20Technologies" width="100%" height="100%" frameborder="0"></iframe>`;''');
+                '''  document.body.innerHTML = `<iframe src="https://calendly.com/d/csxh-3tn-xqs?name=$encodedName&email=$encodedEmail&a1=8087382829&a2=GE%20Technologies" width="100%" height="400px" frameborder="0"></iframe>`;''');
             if (url.contains("confirmation") || url.contains("success")) {
               setState(() {
                 _showWebView = false;
