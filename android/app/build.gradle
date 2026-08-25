@@ -13,7 +13,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.tohfa.app.tohfa"
-    compileSdk = flutter.compileSdkVersion
+    // Flutter 3.32.6 defaults to compileSdk 35; Play Store requires 36+ (Android 16).
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -31,7 +32,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = 26
         versionName = "1.0.14"
     }
