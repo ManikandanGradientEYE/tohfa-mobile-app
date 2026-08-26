@@ -11,6 +11,12 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use your location to help you find nearby stores and provide location-based services.</string>
 
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We use your location to help you find nearby stores and provide location-based services.</string>
+
+	<key>NSLocationUsageDescription</key>
+	<string>We use your location to help you find nearby stores and provide location-based services.</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	
