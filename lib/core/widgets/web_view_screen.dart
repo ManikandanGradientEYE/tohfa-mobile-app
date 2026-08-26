@@ -1,5 +1,5 @@
 import 'package:demo/export.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../features/report/widget/report_screen_appbar.dart';
 
@@ -10,15 +10,13 @@ class WebViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: reportScreenAppbar(title),
-      body: InAppWebView(
-        initialUrlRequest: URLRequest(
-          url: WebUri.uri(Uri.parse(url)),
-        ),
-
-      ),
+      body: WebViewWidget(controller: controller),
     );
   }
 }
