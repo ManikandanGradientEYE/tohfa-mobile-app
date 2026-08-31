@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../report/widget/report_screen_appbar.dart';
+
 class ZohoBookingEmbed extends StatefulWidget {
   const ZohoBookingEmbed({super.key});
 
@@ -84,7 +86,9 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.bgColor,
-        body: Column(
+        appBar: reportScreenAppbar("Schedule Video Call"),
+        body: SafeArea(
+          child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -351,6 +355,7 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
                 ),
               ),
           ],
+          ),
         ));
   }
 

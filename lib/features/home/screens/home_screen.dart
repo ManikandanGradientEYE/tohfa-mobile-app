@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:demo/features/home/model/food_menu_model.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,9 +27,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _currentSliderIndex = 0;
   int _selectedTabIndex = 0;
 
-  ScrollController? scrollController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,6 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeState state,
   ) {
     final bloc = context.read<HomeCubit>();
+    final sliderImages = (bloc.activeBannersModel?.data ?? [])
+        .where((element) => element.category == "Hero")
+        .toList();
     final catalog = (bloc.activeBannersModel?.data ?? [])
         .where((element) => element.category == "Catalog")
         .toList();
@@ -173,27 +177,22 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         SingleChildScrollView(
           padding: getPadding(left: 16, right: 16, top: 0, bottom: 5),
-          controller: _selectedTabIndex == 1 ? scrollController : null,
           child: Column(
             spacing: getSize(10),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildGreetingText(),
+              if (sliderImages.isNotEmpty) _buildSliderWithTabs(sliderImages),
               _buildTabBarButtons(context),
               _selectedTabIndex == 0
                   ? _catalogBuilder(catalog)
-                  : _selectedTabIndex == 1
-                      ? SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.7,
-                          child: ZohoBookingEmbed(),
-                        )
-                      : _selectedTabIndex == 2
-                          ? _offersBuilder(offers)
-                          : _selectedTabIndex == 3
-                              ? _foodMenuBuilder(foodMenu, food, context)
-                              : _selectedTabIndex == 4
-                                  ? _upcomingEventBuilder(event)
-                                  : SizedBox()
+                  : _selectedTabIndex == 2
+                      ? _offersBuilder(offers)
+                      : _selectedTabIndex == 3
+                          ? _foodMenuBuilder(foodMenu, food, context)
+                          : _selectedTabIndex == 4
+                              ? _upcomingEventBuilder(event)
+                              : SizedBox()
             ],
           ),
         ),
@@ -220,6 +219,91 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildSliderWithTabs(List<BannerModel> sliderImages) {
+    return Stack(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: getSize(150),
+            enlargeCenterPage: true,
+            autoPlay: false,
+            autoPlayInterval: const Duration(seconds: 8),
+            viewportFraction: 1,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentSliderIndex = index;
+                // _selectedTabIndex = index;
+              });
+            },
+          ),
+          items: sliderImages.map((banner) => _buildSliderItem(banner)).toList(),
+        ),
+        Positioned(
+          bottom: 10,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _buildSliderIndicators(sliderImages.length),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSliderItem(BannerModel banner) {
+    return InkWell(
+      onTap: () async {
+        if (banner.shopifyUrl != null) {
+          await launchUrl(Uri.parse(banner.shopifyUrl!));
+        }
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: SizedBox(
+          width: double.infinity,
+          child: SizedBox(
+            width: double.infinity,
+            child: CustomImageView(
+              fit: BoxFit.cover,
+              url: banner.bannerUrl,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFBCB9B9).withOpacity(0.29),
+        borderRadius: BorderRadius.circular(getSize(24)),
+      ),
+      padding: getMargin(left: 20, right: 20, top: 10, bottom: 10),
+      child: SizedBox(
+        height: getSize(12),
+        child: CustomImageView(
+          fit: BoxFit.cover,
+          imagePath: ImageConstants.tableArrowRight,
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildSliderIndicators(int count) {
+    return List<Widget>.generate(count, (index) {
+      return Container(
+        width: 6,
+        height: 6,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: index == _currentSliderIndex ? AppColors.primaryColor : const Color(0xFFBCB9B9),
+        ),
+      );
+    });
+  }
 
   Widget _buildTabBarButtons(BuildContext context) {
     final cubit = context.read<HomeCubit>();
@@ -247,15 +331,21 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () async {
+                  if (index == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: cubit,
+                          child: const ZohoBookingEmbed(),
+                        ),
+                      ),
+                    );
+                    return;
+                  }
                   setState(() {
                     _selectedTabIndex = index;
                   });
-                  if (index == 1) {
-                    scrollController = ScrollController();
-                    // WidgetsBinding.instance.addPostFrameCallback((_) {
-                    //   scrollController!.jumpTo(150);
-                    // });
-                  }
                   if (_selectedTabIndex == 3 && cubit.visitStatusModel.isEmpty) {
                     // await cubit.activeFoodMenu();
                     await cubit.getVisitStatus();
