@@ -51,7 +51,7 @@ workflows:
       - name: Flutter build ipa
         script: |
           flutter build ipa --release \
-            --build-name=1.0.8 \
+            --build-name=1.0.9 \
             --build-number=$NEW_BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
 
