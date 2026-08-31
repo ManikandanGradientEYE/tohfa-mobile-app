@@ -38,9 +38,13 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
   @override
   void initState() {
     final siteId = Singleton.instance.userData?.id ?? '';
-    context.read<HomeCubit>().customerRequestLink == null
-        ? context.read<HomeCubit>().getcustomerRequest(siteId)
-        : null;
+    final existingLink = context.read<HomeCubit>().customerRequestLink;
+    if (existingLink == null) {
+      context.read<HomeCubit>().getcustomerRequest(siteId);
+    } else {
+      _webViewUrl = existingLink;
+      _showWebView = true;
+    }
     log("${Singleton.instance.userData!.customerName}", name: "USER NAME");
     log("${Singleton.instance.userData!.customerBillEmail.toString() != "" ? Singleton.instance.userData!.customerBillEmail : "info@tohfajewellery.in"}",
         name: "USER EMAIL");
@@ -80,6 +84,9 @@ class _ZohoBookingEmbedState extends State<ZohoBookingEmbed> {
           },
         ),
       );
+    if (existingLink != null) {
+      _controller.loadRequest(Uri.parse(existingLink));
+    }
   }
 
   @override
